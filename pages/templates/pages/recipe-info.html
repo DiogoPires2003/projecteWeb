@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb4a5",
+                    "surface-container-low": "#f5f4ee",
+                    "on-tertiary-fixed": "#301217",
+                    "on-secondary-fixed-variant": "#802918",
+                    "secondary-fixed": "#ffdad3",
+                    "on-background": "#1b1c19",
+                    "tertiary-fixed-dim": "#efb9bf",
+                    "secondary-container": "#fd876f",
+                    "tertiary-fixed": "#ffd9dd",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#adcfb5",
+                    "tertiary": "#7d5359",
+                    "on-surface": "#1b1c19",
+                    "on-primary": "#ffffff",
+                    "surface": "#faf9f3",
+                    "on-tertiary-container": "#47242a",
+                    "primary-fixed-dim": "#adcfb5",
+                    "inverse-on-surface": "#f2f1eb",
+                    "outline-variant": "#c2c8c1",
+                    "tertiary-container": "#ba898f",
+                    "surface-container": "#efeee8",
+                    "surface-tint": "#476550",
+                    "on-tertiary-fixed-variant": "#633c41",
+                    "error-container": "#ffdad6",
+                    "secondary": "#9f402d",
+                    "primary-container": "#7d9d85",
+                    "on-primary-fixed": "#032110",
+                    "surface-variant": "#e3e3dd",
+                    "on-secondary-fixed": "#3e0500",
+                    "surface-bright": "#faf9f3",
+                    "primary": "#476550",
+                    "outline": "#727972",
+                    "on-secondary-container": "#732010",
+                    "on-primary-container": "#173422",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#304d39",
+                    "surface-container-highest": "#e3e3dd",
+                    "inverse-surface": "#30312d",
+                    "on-surface-variant": "#424843",
+                    "primary-fixed": "#c9ebd0",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#dbdad4",
+                    "surface-container-high": "#e9e8e2",
+                    "on-error": "#ffffff",
+                    "background": "#faf9f3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Newsreader", "serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Inter", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Top Navigation (Shell Suppressed per Task: Contextual Back/Details) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
+<a class="w-10 h-10 rounded-full bg-stone-50/80 backdrop-blur-md flex items-center justify-center text-primary shadow-sm" href="{% url 'pages:recipes' %}">
+<span class="material-symbols-outlined">arrow_back</span>
+</a>
+<button class="w-10 h-10 rounded-full bg-stone-50/80 backdrop-blur-md flex items-center justify-center text-secondary shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</header>
+<main class="pb-32">
+<!-- Hero Section -->
+<div class="relative h-[397px] w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up of creamy pesto pasta with fresh basil leaves, pine nuts, and parmesan shavings on a rustic ceramic plate, soft natural window light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVLYYXwDGd_4SaMyFQJ9-SOQTAhcrHFYe-zYtgtUlyRSra2rocPOVAQAyyMV8JDxcIfoekNAz4a_hAwEzwRB25Un8yB5i9IdqG0ItgqSLKRxc1AQLaRUdm4l6pvDsq-qp_0nVj5mwSfQTtLiegXZ-Ngi7dnKoMC2cxlbkXlDtu9g1sAiIASFeeAWOFQ9Khkt3dXRAi7bRxv3JUgnmlt9uH6_2Hv7SAz45sWThF02k7I-x3TnBjuAFIVL0b9k4_uIkAgjoMQHe7mao"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+<!-- Content Canvas -->
+<div class="relative -mt-10 px-6 rounded-t-[40px] bg-surface min-h-screen pt-8">
+<!-- Info Bar -->
+<div class="flex justify-between items-center bg-surface-container-lowest rounded-2xl p-5 shadow-[0_8px_30px_rgb(71,101,80,0.06)] mb-8">
+<div class="flex flex-col items-center gap-1 border-r border-outline-variant/20 flex-1">
+<span class="material-symbols-outlined text-primary text-xl">schedule</span>
+<span class="text-[11px] font-semibold text-outline uppercase tracking-widest font-label">25 min</span>
+</div>
+<div class="flex flex-col items-center gap-1 border-r border-outline-variant/20 flex-1">
+<span class="material-symbols-outlined text-primary text-xl">bar_chart</span>
+<span class="text-[11px] font-semibold text-outline uppercase tracking-widest font-label">Easy</span>
+</div>
+<div class="flex flex-col items-center gap-1 flex-1">
+<span class="material-symbols-outlined text-primary text-xl">local_fire_department</span>
+<span class="text-[11px] font-semibold text-outline uppercase tracking-widest font-label">450 kcal</span>
+</div>
+</div>
+<!-- Title & Bio -->
+<div class="mb-10 text-center">
+<h1 class="text-4xl font-headline font-bold text-on-surface mb-3 tracking-tight">Creamy Pesto Pasta</h1>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-sm mx-auto italic">
+                    "A vibrant, verdant escape on a plate. This silky sauce clings to every ridge of your pasta for a perfect artisanal bite."
+                </p>
+</div>
+<!-- Tabs Selection -->
+<div class="flex gap-4 mb-8 justify-center">
+<button class="px-8 py-2.5 rounded-full bg-primary text-on-primary font-medium text-sm shadow-sm">Ingredients</button>
+<button class="px-8 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm">Instructions</button>
+</div>
+<!-- Ingredients Section (Active) -->
+<section class="space-y-6">
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-2xl font-headline font-bold text-on-surface">The Pantry List</h2>
+<span class="text-xs font-label text-outline uppercase tracking-widest">6 Items</span>
+</div>
+<div class="grid gap-3">
+<label class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface">Artisan Penne Pasta</span>
+</div>
+<span class="text-sm text-outline font-label">250g</span>
+</label>
+<label class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface">Fresh Basil Leaves</span>
+</div>
+<span class="text-sm text-outline font-label">2 cups</span>
+</label>
+<label class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface">Toasted Pine Nuts</span>
+</div>
+<span class="text-sm text-outline font-label">1/4 cup</span>
+</label>
+<label class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium text-on-surface">Aged Parmesan Cheese</span>
+</div>
+<span class="text-sm text-outline font-label">1/2 cup</span>
+</label>
+</div>
+</section>
+<!-- Preview of Next Section (Instructions Hint) -->
+<section class="mt-12 opacity-40 blur-[1px]">
+<h2 class="text-2xl font-headline font-bold text-on-surface mb-6">Preparation</h2>
+<div class="flex gap-6 mb-8">
+<div class="flex-none w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container font-headline font-bold">1</div>
+<div class="flex-1">
+<p class="text-sm font-medium leading-relaxed">Bring a large pot of salted water to a rolling boil. Add pasta and cook until al dente.</p>
+<div class="mt-4 w-40 h-24 rounded-xl bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Hand adding salt to a steaming pot of boiling water on a sleek induction stovetop, modern kitchen setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcFMuVdXuajruHK98OAUlONTGO8lkgAZmAzB85a8-HqtwFCS2WOvqEZwDiiYiwndIs_WxGKER7xu9mw5phJZULBJC5n5Nl9-KkKqIECyso1S1Ul4_wG4aDvgPr-Wd-QtPvObZhmLmyNCP4BdVmUCnkIpeHFJenh7XNYW6vgmiHuhAHrSBDwwy1vg7HduxxTmOujNBaZUQbaSC2W65CsY9x8gmi5M8yOpZKXxg2whZfcWHIQdGLaAHufvEF-oFzVu7Ojmpc9VCxp_4"/>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<div class="fixed bottom-10 left-0 right-0 flex justify-center z-50 pointer-events-none">
+<button class="pointer-events-auto flex items-center gap-3 bg-secondary text-on-secondary px-8 py-5 rounded-full shadow-[0_16px_32px_-4px_rgba(159,64,45,0.3)] hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="font-label font-bold uppercase tracking-widest text-sm">Start Cook Mode</span>
+</button>
+</div>
+<!-- Bottom Nav (Suppressed for task-focused Detail View as per instructions) -->
+</body></html>
+
+<!-- Recipe Info -->
