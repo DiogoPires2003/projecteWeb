@@ -1,265 +1,155 @@
-<!DOCTYPE html>
+{% extends "pages/base.html" %}
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>My Ingredients - FlavorLoop</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                "secondary-fixed-dim": "#ffb4a5",
-                "surface-container-low": "#f5f4ee",
-                "on-tertiary-fixed": "#301217",
-                "on-secondary-fixed-variant": "#802918",
-                "secondary-fixed": "#ffdad3",
-                "on-background": "#1b1c19",
-                "tertiary-fixed-dim": "#efb9bf",
-                "secondary-container": "#fd876f",
-                "tertiary-fixed": "#ffd9dd",
-                "on-secondary": "#ffffff",
-                "inverse-primary": "#adcfb5",
-                "tertiary": "#7d5359",
-                "on-surface": "#1b1c19",
-                "on-primary": "#ffffff",
-                "surface": "#faf9f3",
-                "on-tertiary-container": "#47242a",
-                "primary-fixed-dim": "#adcfb5",
-                "inverse-on-surface": "#f2f1eb",
-                "outline-variant": "#c2c8c1",
-                "tertiary-container": "#ba898f",
-                "surface-container": "#efeee8",
-                "surface-tint": "#476550",
-                "on-tertiary-fixed-variant": "#633c41",
-                "error-container": "#ffdad6",
-                "secondary": "#9f402d",
-                "primary-container": "#7d9d85",
-                "on-primary-fixed": "#032110",
-                "surface-variant": "#e3e3dd",
-                "on-secondary-fixed": "#3e0500",
-                "surface-bright": "#faf9f3",
-                "primary": "#476550",
-                "outline": "#727972",
-                "on-secondary-container": "#732010",
-                "on-primary-container": "#173422",
-                "on-error-container": "#93000a",
-                "on-primary-fixed-variant": "#304d39",
-                "surface-container-highest": "#e3e3dd",
-                "inverse-surface": "#30312d",
-                "on-surface-variant": "#424843",
-                "primary-fixed": "#c9ebd0",
-                "on-tertiary": "#ffffff",
-                "surface-container-lowest": "#ffffff",
-                "error": "#ba1a1a",
-                "surface-dim": "#dbdad4",
-                "surface-container-high": "#e9e8e2",
-                "on-error": "#ffffff",
-                "background": "#faf9f3"
-            },
-            "borderRadius": {
-                "DEFAULT": "0.25rem",
-                "lg": "0.5rem",
-                "xl": "0.75rem",
-                "full": "9999px"
-            },
-            "fontFamily": {
-                "headline": ["Newsreader", "serif"],
-                "body": ["Inter", "sans-serif"],
-                "label": ["Inter", "sans-serif"]
-            }
-          },
-        }
-      }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3 { font-family: 'Newsreader', serif; }
-    </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
-<body class="bg-surface text-on-surface min-h-screen pb-24">
-<!-- TopAppBar -->
-<header class="bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-lg fixed top-0 w-full z-50 shadow-sm shadow-emerald-900/5 flex items-center justify-between px-6 py-4 w-full">
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-100 cursor-pointer">menu</span>
-<h1 class="font-serif italic font-bold text-emerald-900 dark:text-emerald-50 text-2xl tracking-tight">FlavorLoop</h1>
-</div>
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-100 cursor-pointer">search</span>
-<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
-<img alt="Profile" data-alt="Portrait of a young woman with a friendly smile, soft natural lighting, minimalist aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSdzaGxJvA00CcfwODcmOrB6076DXLDTV1AmIB1pIy9jsEmUAg7YYMC8fritcwkhEkUZ7QIWKPwbW4OYsP52yaN_9vN--M_coSLDWyizNhVxbn9NZsONs89so2BbFVN_r3DLTTMJJ67b1i8CKm4zfmohSJzzh5Hx_EY6HdfiM_ULgVCygReZFYSt54NEgi-GX_MRsnwdskII9pEYm0FJfktRGjZTUeoFNGEkAtuvQEy7RnhBfqsrsb6wLIpK52hTOY9I822oI-SZk"/>
-</div>
-</div>
-</header>
+{% block title %}My Ingredients - FlavorLoop{% endblock %}
+
+{% block content %}
 <main class="pt-24 px-6 max-w-4xl mx-auto">
-<!-- Page Header -->
-<div class="mb-8">
-<h2 class="text-4xl font-headline font-bold text-primary mb-2">My Ingredients</h2>
-<p class="text-on-surface-variant font-body">Manage your pantry and track freshness at a glance.</p>
-</div>
-<!-- Category: Fridge -->
-<section class="mb-12">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-2xl font-headline font-semibold text-on-surface">Fridge</h3>
-<span class="text-sm font-label text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">4 Items</span>
-</div>
-<div class="space-y-4">
-<!-- Item: Milk -->
-<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container shadow-[0_4px_20px_-4px_rgba(71,101,80,0.06)]">
-<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">water_drop</span>
-</div>
-<div class="flex-1">
-<div class="flex justify-between items-baseline mb-2">
-<h4 class="font-semibold text-on-surface">Whole Milk</h4>
-<span class="text-xs font-label text-error font-medium uppercase tracking-wider">Expiring Soon</span>
-</div>
-<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
-<div class="bg-error h-full rounded-full" style="width: 15%;"></div>
-</div>
-<div class="flex justify-between mt-2">
-<span class="text-xs text-on-surface-variant">2 days left</span>
-<span class="text-xs text-on-surface-variant">1L Carton</span>
-</div>
-</div>
-</div>
-<!-- Item: Eggs -->
-<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container shadow-[0_4px_20px_-4px_rgba(71,101,80,0.06)]">
-<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">egg</span>
-</div>
-<div class="flex-1">
-<div class="flex justify-between items-baseline mb-2">
-<h4 class="font-semibold text-on-surface">Organic Eggs</h4>
-<span class="text-xs font-label text-primary font-medium uppercase tracking-wider">Fresh</span>
-</div>
-<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
-<div class="bg-primary h-full rounded-full" style="width: 85%;"></div>
-</div>
-<div class="flex justify-between mt-2">
-<span class="text-xs text-on-surface-variant">12 days left</span>
-<span class="text-xs text-on-surface-variant">6/12 left</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Category: Pantry (Asymmetric Layout) -->
-<section class="mb-12">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-2xl font-headline font-semibold text-on-surface">Pantry</h3>
-<span class="text-sm font-label text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">12 Items</span>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
-<div class="flex justify-between items-start mb-4">
-<div>
-<h4 class="text-lg font-headline font-bold text-on-surface">Baking Essentials</h4>
-<p class="text-xs text-on-surface-variant">Flour, Sugar, Yeast</p>
-</div>
-<span class="material-symbols-outlined text-primary-container">bakery_dining</span>
-</div>
-<div class="space-y-3">
-<div class="flex justify-between text-sm">
-<span class="text-on-surface">All Purpose Flour</span>
-<span class="text-primary-container font-medium">80%</span>
-</div>
-<div class="flex justify-between text-sm">
-<span class="text-on-surface">Brown Sugar</span>
-<span class="text-secondary font-medium">15%</span>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between">
-<div class="flex justify-between items-start">
-<h4 class="text-lg font-headline font-bold text-on-surface">Grains &amp; Pasta</h4>
-<span class="material-symbols-outlined text-primary-container">ramen_dining</span>
-</div>
-<div class="mt-4">
-<div class="flex -space-x-2 overflow-hidden mb-4">
-<div class="inline-block h-8 w-8 rounded-full ring-2 ring-surface bg-surface-variant flex items-center justify-center text-[10px] font-bold">PT</div>
-<div class="inline-block h-8 w-8 rounded-full ring-2 ring-surface bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container">RC</div>
-<div class="inline-block h-8 w-8 rounded-full ring-2 ring-surface bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">QN</div>
-</div>
-<button class="w-full py-2 bg-surface-container-high rounded-full text-xs font-label font-bold uppercase tracking-widest text-on-surface hover:bg-surface-container-highest transition-colors">Manage Stock</button>
-</div>
-</div>
-</div>
-</section>
-<!-- Category: Spices (Clean Grid) -->
-<section class="mb-12">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-2xl font-headline font-semibold text-on-surface">Spices</h3>
-<span class="text-sm font-label text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">Recent</span>
-</div>
-<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-<div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
-<div class="w-2 h-2 rounded-full bg-secondary"></div>
-<span class="text-sm font-medium">Smoked Paprika</span>
-</div>
-<div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
-<div class="w-2 h-2 rounded-full bg-primary"></div>
-<span class="text-sm font-medium">Cumin</span>
-</div>
-<div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
-<div class="w-2 h-2 rounded-full bg-tertiary"></div>
-<span class="text-sm font-medium">Cinnamon</span>
-</div>
-<div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
-<div class="w-2 h-2 rounded-full bg-secondary-container"></div>
-<span class="text-sm font-medium">Turmeric</span>
-</div>
-<div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
-<div class="w-2 h-2 rounded-full bg-outline"></div>
-<span class="text-sm font-medium">Black Pepper</span>
-</div>
-<div class="p-4 border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center text-on-surface-variant gap-2 cursor-pointer hover:bg-surface-container-low transition-colors">
-<span class="material-symbols-outlined text-sm">add</span>
-<span class="text-xs font-bold uppercase tracking-tighter">More</span>
-</div>
-</div>
-</section>
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h2 class="text-4xl font-headline font-bold text-primary mb-2">My Ingredients</h2>
+        <p class="text-on-surface-variant font-body">Manage your pantry and track freshness at a glance.</p>
+    </div>
+    <!-- Category: Fridge -->
+    <section class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-headline font-semibold text-on-surface">Fridge</h3>
+            <span class="text-sm font-label text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">4
+                Items</span>
+        </div>
+        <div class="space-y-4">
+            <!-- Item: Milk -->
+            <div
+                class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container shadow-[0_4px_20px_-4px_rgba(71,101,80,0.06)]">
+                <div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary">water_drop</span>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-baseline mb-2">
+                        <h4 class="font-semibold text-on-surface">Whole Milk</h4>
+                        <span class="text-xs font-label text-error font-medium uppercase tracking-wider">Expiring Soon</span>
+                    </div>
+                    <div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-error h-full rounded-full" style="width: 15%;"></div>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-xs text-on-surface-variant">2 days left</span>
+                        <span class="text-xs text-on-surface-variant">1L Carton</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Item: Eggs -->
+            <div
+                class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container shadow-[0_4px_20px_-4px_rgba(71,101,80,0.06)]">
+                <div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary">egg</span>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-baseline mb-2">
+                        <h4 class="font-semibold text-on-surface">Organic Eggs</h4>
+                        <span class="text-xs font-label text-primary font-medium uppercase tracking-wider">Fresh</span>
+                    </div>
+                    <div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full rounded-full" style="width: 85%;"></div>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-xs text-on-surface-variant">12 days left</span>
+                        <span class="text-xs text-on-surface-variant">6/12 left</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Category: Pantry (Asymmetric Layout) -->
+    <section class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-headline font-semibold text-on-surface">Pantry</h3>
+            <span class="text-sm font-label text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">12
+                Items</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="text-lg font-headline font-bold text-on-surface">Baking Essentials</h4>
+                        <p class="text-xs text-on-surface-variant">Flour, Sugar, Yeast</p>
+                    </div>
+                    <span class="material-symbols-outlined text-primary-container">bakery_dining</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-on-surface">All Purpose Flour</span>
+                        <span class="text-primary-container font-medium">80%</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-on-surface">Brown Sugar</span>
+                        <span class="text-secondary font-medium">15%</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <h4 class="text-lg font-headline font-bold text-on-surface">Grains &amp; Pasta</h4>
+                    <span class="material-symbols-outlined text-primary-container">ramen_dining</span>
+                </div>
+                <div class="mt-4">
+                    <div class="flex -space-x-2 overflow-hidden mb-4">
+                        <div
+                            class="inline-block h-8 w-8 rounded-full ring-2 ring-surface bg-surface-variant flex items-center justify-center text-[10px] font-bold">
+                            PT</div>
+                        <div
+                            class="inline-block h-8 w-8 rounded-full ring-2 ring-surface bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container">
+                            RC</div>
+                        <div
+                            class="inline-block h-8 w-8 rounded-full ring-2 ring-surface bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">
+                            QN</div>
+                    </div>
+                    <button
+                        class="w-full py-2 bg-surface-container-high rounded-full text-xs font-label font-bold uppercase tracking-widest text-on-surface hover:bg-surface-container-highest transition-colors">Manage
+                        Stock</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Category: Spices (Clean Grid) -->
+    <section class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-headline font-semibold text-on-surface">Spices</h3>
+            <span
+                class="text-sm font-label text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">Recent</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-secondary"></div>
+                <span class="text-sm font-medium">Smoked Paprika</span>
+            </div>
+            <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <span class="text-sm font-medium">Cumin</span>
+            </div>
+            <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-tertiary"></div>
+                <span class="text-sm font-medium">Cinnamon</span>
+            </div>
+            <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-secondary-container"></div>
+                <span class="text-sm font-medium">Turmeric</span>
+            </div>
+            <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-outline"></div>
+                <span class="text-sm font-medium">Black Pepper</span>
+            </div>
+            <a href="{% url 'pages:ingredient_info' %}"
+                class="p-4 border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center text-on-surface-variant gap-2 cursor-pointer hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-sm">add</span>
+                <span class="text-xs font-bold uppercase tracking-tighter">More</span>
+            </a>
+        </div>
+    </section>
 </main>
 <!-- Contextual FAB -->
-<button class="fixed bottom-28 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-[0_12px_32px_-4px_rgba(71,101,80,0.4)] flex items-center justify-center transition-transform active:scale-95 z-40 group">
-<span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform duration-300">add</span>
-</button>
-<!-- BottomNavBar -->
-<nav class="bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xl fixed bottom-0 w-full rounded-t-3xl z-50 border-t border-stone-200/20 shadow-[0_-4px_20px_0_rgba(71,101,80,0.06)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3">
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="{% url 'pages:home' %}">
-<span class="material-symbols-outlined">home</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Home</span>
+<a href="{% url 'pages:ingredient_info' %}"
+    class="fixed bottom-28 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-[0_12px_32px_-4px_rgba(71,101,80,0.4)] flex items-center justify-center transition-transform active:scale-95 z-40 group">
+    <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform duration-300">add</span>
 </a>
-<a class="flex flex-col items-center justify-center text-emerald-900 dark:text-emerald-100 bg-emerald-100/50 dark:bg-emerald-800/40 rounded-xl px-3 py-1.5 transition-all" href="{% url 'pages:ingredients' %}">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">kitchen</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Pantry</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="{% url 'pages:recipe_info' %}">
-<span class="material-symbols-outlined">add_circle</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Add</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="{% url 'pages:recipes' %}">
-<span class="material-symbols-outlined">menu_book</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Recipes</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all" href="{% url 'pages:settings' %}">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Settings</span>
-</a>
-</nav>
-</body></html>
-
-<!-- My Pantry -->
+{% endblock %}

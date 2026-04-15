@@ -1,263 +1,185 @@
-<!DOCTYPE html>
+{% extends "pages/base.html" %}
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>My Recipes - FlavorLoop</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "secondary-fixed-dim": "#ffb4a5",
-                        "surface-container-low": "#f5f4ee",
-                        "on-tertiary-fixed": "#301217",
-                        "on-secondary-fixed-variant": "#802918",
-                        "secondary-fixed": "#ffdad3",
-                        "on-background": "#1b1c19",
-                        "tertiary-fixed-dim": "#efb9bf",
-                        "secondary-container": "#fd876f",
-                        "tertiary-fixed": "#ffd9dd",
-                        "on-secondary": "#ffffff",
-                        "inverse-primary": "#adcfb5",
-                        "tertiary": "#7d5359",
-                        "on-surface": "#1b1c19",
-                        "on-primary": "#ffffff",
-                        "surface": "#faf9f3",
-                        "on-tertiary-container": "#47242a",
-                        "primary-fixed-dim": "#adcfb5",
-                        "inverse-on-surface": "#f2f1eb",
-                        "outline-variant": "#c2c8c1",
-                        "tertiary-container": "#ba898f",
-                        "surface-container": "#efeee8",
-                        "surface-tint": "#476550",
-                        "on-tertiary-fixed-variant": "#633c41",
-                        "error-container": "#ffdad6",
-                        "secondary": "#9f402d",
-                        "primary-container": "#7d9d85",
-                        "on-primary-fixed": "#032110",
-                        "surface-variant": "#e3e3dd",
-                        "on-secondary-fixed": "#3e0500",
-                        "surface-bright": "#faf9f3",
-                        "primary": "#476550",
-                        "outline": "#727972",
-                        "on-secondary-container": "#732010",
-                        "on-primary-container": "#173422",
-                        "on-error-container": "#93000a",
-                        "on-primary-fixed-variant": "#304d39",
-                        "surface-container-highest": "#e3e3dd",
-                        "inverse-surface": "#30312d",
-                        "on-surface-variant": "#424843",
-                        "primary-fixed": "#c9ebd0",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-lowest": "#ffffff",
-                        "error": "#ba1a1a",
-                        "surface-dim": "#dbdad4",
-                        "surface-container-high": "#e9e8e2",
-                        "on-error": "#ffffff",
-                        "background": "#faf9f3"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Newsreader"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    }
-                },
-            }
-        }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, .font-serif { font-family: 'Newsreader', serif; }
-    </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
-<body class="bg-surface text-on-surface min-h-screen pb-32">
-<!-- TopAppBar -->
-<header class="bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-lg flex items-center justify-between px-6 py-4 w-full fixed top-0 z-50 shadow-sm shadow-emerald-900/5">
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-100 cursor-pointer">menu</span>
-<span class="font-serif italic font-bold text-emerald-900 dark:text-emerald-50 text-2xl tracking-tight">FlavorLoop</span>
-</div>
-<div class="hidden md:flex items-center space-x-8">
-<a class="text-stone-500 dark:text-stone-400 font-medium hover:text-emerald-700 transition-all" href="{% url 'pages:home' %}">Home</a>
-<a class="text-stone-500 dark:text-stone-400 font-medium hover:text-emerald-700 transition-all" href="{% url 'pages:ingredients' %}">Pantry</a>
-<a class="text-emerald-900 dark:text-emerald-50 font-bold" href="{% url 'pages:settings' %}">Settings</a>
-</div>
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
-<img alt="Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a smiling young chef wearing a white linen shirt in a warm, sunlit kitchen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWUsfz-2T5Rq5cTb6yCqR8bUSU0Tfymsi2WQDsSn68sqEOM0qCYjpidWlQuyp8AywIO1oQ6NYgOFt1tJ6qKtiv8g9onIZK3ws_M9D7SDOoPMGx8qoKg0zT5HjNXt5xv0QDqz_FR1oCBQG-imn-ynmfcUqiAqBaY0HgTmJvawUU9UrPv4SppsfEJIBLgCphthS5hCgEurelAiENmKjK6tDSRfn9YOF-8tC0ZiulPSiCj0osVwSpTxbaQFcz84tz6tJQxQXEz2k9MNw"/>
-</div>
-</div>
-</header>
+{% block title %}My Recipes - FlavorLoop{% endblock %}
+
+{% block content %}
 <main class="pt-24 px-6 max-w-5xl mx-auto">
-<!-- User Profile Header -->
-<section class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
-<div class="relative group">
-<div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-primary/10">
-<img alt="Julian V." class="w-full h-full object-cover" data-alt="Professional headshot of a creative culinary artist in a bright organic studio environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ-Wg36rtJMY4VTVdQYfVBX6I7XwfLyxF---47TPWtTbz7BlIC99FoX49wyyJYmMs-gy5ZCkUBCfw84F4CuZXBZ-xZXm3HXk6PMKwtquKaLggSqy917CnEHr-NL-_BAhW7lgPxg7_4bXWRiDI3Og0qUmPH0kvk73tjnmnyOFhuG1C6VRAR-6QrjmxoysngmWqAW5nw_0KD5bh9ZNZFXwO7p7yZEj2FDFzEnypt7MYViMI7D5rFkxfHOabennteiFZmDloR5-Zu6uU"/>
-</div>
-<button class="absolute bottom-1 right-1 bg-primary text-on-primary p-2 rounded-full shadow-lg">
-<span class="material-symbols-outlined text-sm">edit</span>
-</button>
-</div>
-<div class="flex-1 text-center md:text-left">
-<h1 class="text-4xl font-serif font-bold text-on-surface mb-2 italic">Julian Vance</h1>
-<p class="text-on-surface-variant max-w-md mb-6 leading-relaxed">
-                    Culinary explorer and sourdough enthusiast. Documenting the slow-food journey from farm to the curated table.
-                </p>
-<div class="flex justify-center md:justify-start gap-8">
-<div class="text-center">
-<span class="block text-2xl font-serif font-bold text-primary">42</span>
-<span class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Recipes</span>
-</div>
-<div class="text-center">
-<span class="block text-2xl font-serif font-bold text-primary">1.2k</span>
-<span class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Followers</span>
-</div>
-<div class="text-center">
-<span class="block text-2xl font-serif font-bold text-primary">8.5k</span>
-<span class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Likes</span>
-</div>
-</div>
-</div>
-</section>
-<!-- Tabs -->
-<nav class="flex space-x-8 border-b border-outline-variant/20 mb-10 overflow-x-auto pb-1">
-<button class="pb-4 text-primary border-b-2 border-primary font-bold text-sm tracking-wide uppercase transition-all">My Creations</button>
-<button class="pb-4 text-on-surface-variant hover:text-primary font-medium text-sm tracking-wide uppercase transition-all">Saved Recipes</button>
-<button class="pb-4 text-on-surface-variant hover:text-primary font-medium text-sm tracking-wide uppercase transition-all">Meal Plans</button>
-</nav>
-<!-- Recipe Content Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-<!-- Create New Card -->
-<div class="group cursor-pointer flex flex-col items-center justify-center p-8 bg-surface-container-low border-2 border-dashed border-outline-variant/50 rounded-2xl min-h-[360px] hover:border-primary/50 transition-colors">
-<div class="w-14 h-14 rounded-full bg-primary-fixed-dim flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-on-primary-fixed-variant scale-125">add</span>
-</div>
-<h3 class="font-serif text-xl font-bold text-on-surface">Create New Recipe</h3>
-<p class="text-sm text-on-surface-variant mt-2 text-center">Share your latest culinary masterpiece</p>
-</div>
-<!-- Recipe Card 1 -->
-<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group">
-<div class="relative h-64 overflow-hidden">
-<img alt="Recipe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Gourmet salad with roasted beets, goat cheese, and microgreens on a matte ceramic plate with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8bG70u7SqHgQ8RhK7Me5LplN6XKTxm6tu59FzCWd-GNFNmf3za2jaq43Y-NR29jL5u5FMPiT4gGxEf3XckoLTVMr_R5MS4ocpYfxA_oMjDDUU8Tyq03M7G_d-tvyxKlnSBLPRdaCbJrNslKkERx2UHsMgKbabtA68UQ06ljkZ4oZc0QSkthA9zAAloiMGpQMHFV44ArWMqC0dl1FO1OJaikFrL77KOuhDOgNv3ntQQCCZoLmBqWTv1s3tOmmTh5nv_aVpkSfAbFg"/>
-<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-secondary flex items-center gap-1">
-<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">favorite</span> 124
+    <!-- User Profile Header -->
+    <section class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
+        <div class="relative group">
+            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-primary/10">
+                <img alt="Julian V." class="w-full h-full object-cover"
+                    data-alt="Professional headshot of a creative culinary artist in a bright organic studio environment"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ-Wg36rtJMY4VTVdQYfVBX6I7XwfLyxF---47TPWtTbz7BlIC99FoX49wyyJYmMs-gy5ZCkUBCfw84F4CuZXBZ-xZXm3HXk6PMKwtquKaLggSqy917CnEHr-NL-_BAhW7lgPxg7_4bXWRiDI3Og0qUmPH0kvk73tjnmnyOFhuG1C6VRAR-6QrjmxoysngmWqAW5nw_0KD5bh9ZNZFXwO7p7yZEj2FDFzEnypt7MYViMI7D5rFkxfHOabennteiFZmDloR5-Zu6uU" />
+            </div>
+            <button class="absolute bottom-1 right-1 bg-primary text-on-primary p-2 rounded-full shadow-lg">
+                <span class="material-symbols-outlined text-sm">edit</span>
+            </button>
+        </div>
+        <div class="flex-1 text-center md:text-left">
+            <h1 class="text-4xl font-serif font-bold text-on-surface mb-2 italic">Julian Vance</h1>
+            <p class="text-on-surface-variant max-w-md mb-6 leading-relaxed">
+                Culinary explorer and sourdough enthusiast. Documenting the slow-food journey from farm to the
+                curated table.
+            </p>
+            <div class="flex justify-center md:justify-start gap-8">
+                <div class="text-center">
+                    <span class="block text-2xl font-serif font-bold text-primary">42</span>
+                    <span
+                        class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Recipes</span>
+                </div>
+                <div class="text-center">
+                    <span class="block text-2xl font-serif font-bold text-primary">1.2k</span>
+                    <span
+                        class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Followers</span>
+                </div>
+                <div class="text-center">
+                    <span class="block text-2xl font-serif font-bold text-primary">8.5k</span>
+                    <span class="text-xs uppercase tracking-widest text-on-surface-variant font-medium">Likes</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Tabs -->
+    <nav class="flex space-x-8 border-b border-outline-variant/20 mb-10 overflow-x-auto pb-1">
+        <button
+            class="pb-4 text-primary border-b-2 border-primary font-bold text-sm tracking-wide uppercase transition-all">My
+            Creations</button>
+        <button
+            class="pb-4 text-on-surface-variant hover:text-primary font-medium text-sm tracking-wide uppercase transition-all">Saved
+            Recipes</button>
+        <button
+            class="pb-4 text-on-surface-variant hover:text-primary font-medium text-sm tracking-wide uppercase transition-all">Meal
+            Plans</button>
+    </nav>
+    <!-- Recipe Content Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Create New Card -->
+        <a href="{% url 'pages:recipe_info' %}"
+            class="group cursor-pointer flex flex-col items-center justify-center p-8 bg-surface-container-low border-2 border-dashed border-outline-variant/50 rounded-2xl min-h-[360px] hover:border-primary/50 transition-colors">
+            <div
+                class="w-14 h-14 rounded-full bg-primary-fixed-dim flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-on-primary-fixed-variant scale-125">add</span>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-on-surface">Create New Recipe</h3>
+            <p class="text-sm text-on-surface-variant mt-2 text-center">Share your latest culinary masterpiece</p>
+        </a>
+        <!-- Recipe Card 1 -->
+        <article
+            class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group">
+            <div class="relative h-64 overflow-hidden">
+                <img alt="Recipe"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    data-alt="Gourmet salad with roasted beets, goat cheese, and microgreens on a matte ceramic plate with soft natural lighting"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8bG70u7SqHgQ8RhK7Me5LplN6XKTxm6tu59FzCWd-GNFNmf3za2jaq43Y-NR29jL5u5FMPiT4gGxEf3XckoLTVMr_R5MS4ocpYfxA_oMjDDUU8Tyq03M7G_d-tvyxKlnSBLPRdaCbJrNslKkERx2UHsMgKbabtA68UQ06ljkZ4oZc0QSkthA9zAAloiMGpQMHFV44ArWMqC0dl1FO1OJaikFrL77KOuhDOgNv3ntQQCCZoLmBqWTv1s3tOmmTh5nv_aVpkSfAbFg" />
+                <div
+                    class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-secondary flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs"
+                        style="font-variation-settings: 'FILL' 1;">favorite</span> 124
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-primary-container">Vegetarian</span>
+                    <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">25
+                        mins</span>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-on-surface leading-tight mb-2">Heritage Beet &amp;
+                    Goat Cheese Tartine</h3>
+                <p class="text-sm text-on-surface-variant line-clamp-2">A vibrant, earth-forward appetizer utilizing
+                    seasonal local root vegetables and herb-infused oils.</p>
+            </div>
+        </article>
+        <!-- Recipe Card 2 -->
+        <article
+            class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group">
+            <div class="relative h-64 overflow-hidden">
+                <img alt="Recipe"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    data-alt="Platter of pan-seared scallops with a vibrant pea purée and lemon zest, styled on a wooden table with rustic charm"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8_usypfUTYACr0GZmXsUSAlmkmvgmDzCqaHLvXA0uustnY9eDp30FsOnEaZ6_Hu3VhjHylkJp3NVa9m-GaIzSYImxieR4pK8CJWpFEnCNtTQj63oxcPuftxaDvrdsnUFMUng_lmSWV1BmjerwzWFIvJwH-8fKPYEpCdOu4FiNxFV7l46AxZ_hlWCzWIQPjYPyvnSxEjMFG5gKi9T9ArlCLSQdqJ9jYFtHIe6idCft-WvPP9kJLV6X_XkoAaaP1P0bayZ6pKcfb3w" />
+                <div
+                    class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-secondary flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs"
+                        style="font-variation-settings: 'FILL' 1;">favorite</span> 89
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-primary-container">Seafood</span>
+                    <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">15
+                        mins</span>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-on-surface leading-tight mb-2">Butter-Poached Coastal
+                    Scallops</h3>
+                <p class="text-sm text-on-surface-variant line-clamp-2">Perfectly seared scallops resting on a bed
+                    of silk-smooth pea purée, finished with Maldon salt.</p>
+            </div>
+        </article>
+        <!-- Recipe Card 3 (Asymmetric layout feel) -->
+        <article
+            class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group lg:col-span-2">
+            <div class="flex flex-col md:flex-row h-full">
+                <div class="md:w-1/2 h-64 md:h-auto overflow-hidden">
+                    <img alt="Recipe"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        data-alt="Close up of artisan cupcakes with whipped cream and fresh berries in a bright airy studio"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuADY1vS6nvBgUJg2WRLDIAYaq4VyQLoMWTCTgWfyeKGtp3k88OIFeN2nkXvQes0Y6AeI2J76XuELkBbycaPV-GfclffL6qcWxHOIWlegQCCMknZK_GzbBL1UGUxpE0WwLw44-Ca6oHu60cd7bqpPxBqEHcxrCBPTK4IfNm30F_HqswAEV9gT0b0ISx-cmu57eH5-PW-II_E_QiqyJt-vMf2QqkBFLJYOctJ2874xIdWy5sLmB-SjtH1w2GH-u7D3R9iVNGiBh-Bw7M" />
+                </div>
+                <div class="md:w-1/2 p-8 flex flex-col justify-center">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-secondary">Editor's
+                            Choice</span>
+                        <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                        <span
+                            class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Dessert</span>
                     </div>
-</div>
-<div class="p-6">
-<div class="flex items-center gap-2 mb-2">
-<span class="text-[10px] font-bold uppercase tracking-widest text-primary-container">Vegetarian</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">25 mins</span>
-</div>
-<h3 class="font-serif text-2xl font-bold text-on-surface leading-tight mb-2">Heritage Beet &amp; Goat Cheese Tartine</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2">A vibrant, earth-forward appetizer utilizing seasonal local root vegetables and herb-infused oils.</p>
-</div>
-</article>
-<!-- Recipe Card 2 -->
-<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group">
-<div class="relative h-64 overflow-hidden">
-<img alt="Recipe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Platter of pan-seared scallops with a vibrant pea purée and lemon zest, styled on a wooden table with rustic charm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8_usypfUTYACr0GZmXsUSAlmkmvgmDzCqaHLvXA0uustnY9eDp30FsOnEaZ6_Hu3VhjHylkJp3NVa9m-GaIzSYImxieR4pK8CJWpFEnCNtTQj63oxcPuftxaDvrdsnUFMUng_lmSWV1BmjerwzWFIvJwH-8fKPYEpCdOu4FiNxFV7l46AxZ_hlWCzWIQPjYPyvnSxEjMFG5gKi9T9ArlCLSQdqJ9jYFtHIe6idCft-WvPP9kJLV6X_XkoAaaP1P0bayZ6pKcfb3w"/>
-<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-secondary flex items-center gap-1">
-<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">favorite</span> 89
+                    <h3 class="font-serif text-3xl font-bold text-on-surface leading-tight mb-4 italic">Summer Berry
+                        Mascarpone Clouds</h3>
+                    <p class="text-on-surface-variant mb-6">A light, ethereal dessert that captures the essence of
+                        late July. Using wild-harvested blackberries and honey-whisked cream.</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <span class="material-symbols-outlined text-primary">schedule</span>
+                        <span class="text-sm font-medium text-on-surface">45 mins</span>
+                        <span class="mx-2 text-outline-variant">|</span>
+                        <span class="material-symbols-outlined text-primary">groups</span>
+                        <span class="text-sm font-medium text-on-surface">6 portions</span>
                     </div>
-</div>
-<div class="p-6">
-<div class="flex items-center gap-2 mb-2">
-<span class="text-[10px] font-bold uppercase tracking-widest text-primary-container">Seafood</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">15 mins</span>
-</div>
-<h3 class="font-serif text-2xl font-bold text-on-surface leading-tight mb-2">Butter-Poached Coastal Scallops</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2">Perfectly seared scallops resting on a bed of silk-smooth pea purée, finished with Maldon salt.</p>
-</div>
-</article>
-<!-- Recipe Card 3 (Asymmetric layout feel) -->
-<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group lg:col-span-2">
-<div class="flex flex-col md:flex-row h-full">
-<div class="md:w-1/2 h-64 md:h-auto overflow-hidden">
-<img alt="Recipe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up of artisan cupcakes with whipped cream and fresh berries in a bright airy studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADY1vS6nvBgUJg2WRLDIAYaq4VyQLoMWTCTgWfyeKGtp3k88OIFeN2nkXvQes0Y6AeI2J76XuELkBbycaPV-GfclffL6qcWxHOIWlegQCCMknZK_GzbBL1UGUxpE0WwLw44-Ca6oHu60cd7bqpPxBqEHcxrCBPTK4IfNm30F_HqswAEV9gT0b0ISx-cmu57eH5-PW-II_E_QiqyJt-vMf2QqkBFLJYOctJ2874xIdWy5sLmB-SjtH1w2GH-u7D3R9iVNGiBh-Bw7M"/>
-</div>
-<div class="md:w-1/2 p-8 flex flex-col justify-center">
-<div class="flex items-center gap-2 mb-4">
-<span class="text-[10px] font-bold uppercase tracking-widest text-secondary">Editor's Choice</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Dessert</span>
-</div>
-<h3 class="font-serif text-3xl font-bold text-on-surface leading-tight mb-4 italic">Summer Berry Mascarpone Clouds</h3>
-<p class="text-on-surface-variant mb-6">A light, ethereal dessert that captures the essence of late July. Using wild-harvested blackberries and honey-whisked cream.</p>
-<div class="flex items-center gap-4 mt-auto">
-<span class="material-symbols-outlined text-primary">schedule</span>
-<span class="text-sm font-medium text-on-surface">45 mins</span>
-<span class="mx-2 text-outline-variant">|</span>
-<span class="material-symbols-outlined text-primary">groups</span>
-<span class="text-sm font-medium text-on-surface">6 portions</span>
-</div>
-</div>
-</div>
-</article>
-<!-- Recipe Card 4 -->
-<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group">
-<div class="relative h-64 overflow-hidden">
-<img alt="Recipe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Healthy buddha bowl with avocado, quinoa, and vibrant vegetables in a minimalist ceramic bowl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfpxWUiNInLtwLC8-4OH52HrJBsoJ8H4sHcCD8j1BvfPa89nxnJ7Ha3v3Q9q0kMNvgPkbwFoWokMItJdL2w7zTdSBmkHADb1L7Afi6ovjI_CqJrgWPJ5PgkfcgxeGw5S0yRmzpsX_rMHNmGRAoesfa43EAxWmgGgsnOvbRGfkH7Pje0Cc6gR4LcoYQ9OVTYx2alF8UcDKW0sxGZP9pwHnd08ulVohOQLd41u4yLph_Jd3yzGJrJyoli5oRSojswH33SRs08yNhF9I"/>
-<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-secondary flex items-center gap-1">
-<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">favorite</span> 210
-                    </div>
-</div>
-<div class="p-6">
-<div class="flex items-center gap-2 mb-2">
-<span class="text-[10px] font-bold uppercase tracking-widest text-primary-container">Plant-Based</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">20 mins</span>
-</div>
-<h3 class="font-serif text-2xl font-bold text-on-surface leading-tight mb-2">Mediterranean Quinoa Bowl</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2">The ultimate weekday lunch. Nutrient-dense, colorful, and dressed in a zesty tahini-lemon vinaigrette.</p>
-</div>
-</article>
-</div>
+                </div>
+            </div>
+        </article>
+        <!-- Recipe Card 4 -->
+        <article
+            class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_4px_20px_0_rgba(71,101,80,0.04)] group">
+            <div class="relative h-64 overflow-hidden">
+                <img alt="Recipe"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    data-alt="Healthy buddha bowl with avocado, quinoa, and vibrant vegetables in a minimalist ceramic bowl"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfpxWUiNInLtwLC8-4OH52HrJBsoJ8H4sHcCD8j1BvfPa89nxnJ7Ha3v3Q9q0kMNvgPkbwFoWokMItJdL2w7zTdSBmkHADb1L7Afi6ovjI_CqJrgWPJ5PgkfcgxeGw5S0yRmzpsX_rMHNmGRAoesfa43EAxWmgGgsnOvbRGfkH7Pje0Cc6gR4LcoYQ9OVTYx2alF8UcDKW0sxGZP9pwHnd08ulVohOQLd41u4yLph_Jd3yzGJrJyoli5oRSojswH33SRs08yNhF9I" />
+                <div
+                    class="absolute top-4 right-4 bg-surface/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-secondary flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs"
+                        style="font-variation-settings: 'FILL' 1;">favorite</span> 210
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-primary-container">Plant-Based</span>
+                    <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">20
+                        mins</span>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-on-surface leading-tight mb-2">Mediterranean Quinoa
+                    Bowl</h3>
+                <p class="text-sm text-on-surface-variant line-clamp-2">The ultimate weekday lunch. Nutrient-dense,
+                    colorful, and dressed in a zesty tahini-lemon vinaigrette.</p>
+            </div>
+        </article>
+    </div>
 </main>
-<!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xl border-t border-stone-200/20 shadow-[0_-4px_20px_0_rgba(71,101,80,0.06)] rounded-t-3xl z-50 md:hidden">
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 transition-all" href="{% url 'pages:home' %}">
-<span class="material-symbols-outlined">home</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Home</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 transition-all" href="{% url 'pages:ingredients' %}">
-<span class="material-symbols-outlined">kitchen</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Pantry</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 transition-all" href="{% url 'pages:recipe_info' %}">
-<span class="material-symbols-outlined text-emerald-900 scale-125">add_circle</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Add</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 px-3 py-1.5 hover:text-emerald-700 transition-all" href="{% url 'pages:recipes' %}">
-<span class="material-symbols-outlined">menu_book</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Recipes</span>
-</a>
-<a class="flex flex-col items-center justify-center text-emerald-900 dark:text-emerald-100 bg-emerald-100/50 dark:bg-emerald-800/40 rounded-xl px-3 py-1.5 scale-95 duration-150" href="{% url 'pages:settings' %}">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
-<span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Settings</span>
-</a>
-</nav>
-</body></html>
+{% endblock %}

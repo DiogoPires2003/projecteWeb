@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}FlavorLoop{% endblock %}</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Inter:wght@100..900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb4a5",
+                        "surface-container-low": "#f5f4ee",
+                        "on-tertiary-fixed": "#301217",
+                        "on-secondary-fixed-variant": "#802918",
+                        "secondary-fixed": "#ffdad3",
+                        "on-background": "#1b1c19",
+                        "tertiary-fixed-dim": "#efb9bf",
+                        "secondary-container": "#fd876f",
+                        "tertiary-fixed": "#ffd9dd",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#adcfb5",
+                        "tertiary": "#7d5359",
+                        "on-surface": "#1b1c19",
+                        "on-primary": "#ffffff",
+                        "surface": "#faf9f3",
+                        "on-tertiary-container": "#47242a",
+                        "primary-fixed-dim": "#adcfb5",
+                        "inverse-on-surface": "#f2f1eb",
+                        "outline-variant": "#c2c8c1",
+                        "tertiary-container": "#ba898f",
+                        "surface-container": "#efeee8",
+                        "surface-tint": "#476550",
+                        "on-tertiary-fixed-variant": "#633c41",
+                        "error-container": "#ffdad6",
+                        "secondary": "#9f402d",
+                        "primary-container": "#7d9d85",
+                        "on-primary-fixed": "#032110",
+                        "surface-variant": "#e3e3dd",
+                        "on-secondary-fixed": "#3e0500",
+                        "surface-bright": "#faf9f3",
+                        "primary": "#476550",
+                        "outline": "#727972",
+                        "on-secondary-container": "#732010",
+                        "on-primary-container": "#173422",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#304d39",
+                        "surface-container-highest": "#e3e3dd",
+                        "inverse-surface": "#30312d",
+                        "on-surface-variant": "#424843",
+                        "primary-fixed": "#c9ebd0",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dbdad4",
+                        "surface-container-high": "#e9e8e2",
+                        "on-error": "#ffffff",
+                        "background": "#faf9f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "xxl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                },
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-serif {
+            font-family: 'Newsreader', serif;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+    {% block navbar %}
+    <!-- TopAppBar -->
+    <header
+        class="bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-lg fixed top-0 w-full z-50 shadow-sm shadow-emerald-900/5">
+        <div class="flex items-center justify-between px-6 py-4 w-full">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-emerald-900 dark:text-emerald-100 cursor-pointer">menu</span>
+                <a href="{% url 'pages:home' %}" class="font-serif italic font-bold text-emerald-900 dark:text-emerald-50 text-2xl tracking-tight">
+                    FlavorLoop
+                </a>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a class="{% if request.resolver_match.url_name == 'home' %}text-emerald-900 dark:text-emerald-50 font-bold{% else %}text-emerald-800/60 dark:text-emerald-200/60 hover:text-emerald-900{% endif %} transition-colors"
+                    href="{% url 'pages:home' %}">Home</a>
+                {% if user.is_authenticated %}
+                <a class="{% if request.resolver_match.url_name == 'ingredients' %}text-emerald-900 dark:text-emerald-50 font-bold{% else %}text-emerald-800/60 dark:text-emerald-200/60 hover:text-emerald-900{% endif %} transition-colors"
+                    href="{% url 'pages:ingredients' %}">Pantry</a>
+                <a class="{% if request.resolver_match.url_name == 'recipes' %}text-emerald-900 dark:text-emerald-50 font-bold{% else %}text-emerald-800/60 dark:text-emerald-200/60 hover:text-emerald-900{% endif %} transition-colors"
+                    href="{% url 'pages:recipes' %}">Recipes</a>
+                <a class="{% if request.resolver_match.url_name == 'settings' %}text-emerald-900 dark:text-emerald-50 font-bold{% else %}text-emerald-800/60 dark:text-emerald-200/60 hover:text-emerald-900{% endif %} transition-colors"
+                    href="{% url 'pages:settings' %}">Settings</a>
+                <form action="{% url 'pages:logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="text-secondary/80 hover:text-secondary transition-colors font-medium">Logout</button>
+                </form>
+                {% else %}
+                <a class="text-emerald-800/60 dark:text-emerald-200/60 hover:text-emerald-900 transition-colors"
+                    href="{% url 'pages:login' %}">Login</a>
+                <a class="bg-primary text-on-primary px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-all"
+                    href="{% url 'pages:register' %}">Register</a>
+                {% endif %}
+            </div>
+            {% if user.is_authenticated %}
+            <div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center overflow-hidden">
+                <img class="w-full h-full object-cover"
+                    alt="Profile"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFmJTOTI3KpMGMt4c7MSfwPSzjAAZfJ9zhTXFvem5ETkFQhCQhxndv8JipWxWB5DnQi6R_P38k841i0fe-uSgkeY2Q7g630tIM2jua20VEMgHlhlXuAYQWXZGZHi4ypgp25ytNxaMoZtp7TzuS7AXI-x8t2ydOC4MPH2QWOC-dfXlnhrBvfLV8fIHI8_LH25NgFuFTO8GvCWqFKn8OzPWEHomuL5GLIWq6GdlaxKAhyDQsLSHseZfZxsANSHM6ofCw6D2PUsgZao8" />
+            </div>
+            {% endif %}
+        </div>
+    </header>
+    {% endblock %}
+
+    {% if messages %}
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-6 pointer-events-none">
+        {% for message in messages %}
+        <div class="mb-3 p-4 rounded-xl shadow-lg border backdrop-blur-md pointer-events-auto animate-in fade-in slide-in-from-top-4 duration-300
+            {% if message.tags == 'error' %}bg-error-container/90 text-on-error-container border-error/20
+            {% elif message.tags == 'success' %}bg-primary-container/90 text-on-primary-container border-primary/20
+            {% else %}bg-surface-container-highest/90 text-on-surface border-outline-variant/20{% endif %}">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-xl">
+                    {% if message.tags == 'error' %}error{% elif message.tags == 'success' %}check_circle{% else %}info{% endif %}
+                </span>
+                <p class="text-sm font-medium">{{ message }}</p>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-auto opacity-60 hover:opacity-100">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+
+    {% block bottom_nav %}
+    <!-- BottomNavBar -->
+    <nav
+        class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xl rounded-t-3xl z-50 border-t border-stone-200/20 shadow-[0_-4px_20px_0_rgba(71,101,80,0.06)] md:hidden">
+        <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'home' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
+            href="{% url 'pages:home' %}">
+            <span class="material-symbols-outlined">home</span>
+            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Home</span>
+        </a>
+        <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'ingredients' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
+            href="{% url 'pages:ingredients' %}">
+            <span class="material-symbols-outlined">kitchen</span>
+            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Pantry</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-stone-500 px-3 py-1.5"
+            href="{% url 'pages:recipe_info' %}">
+            <span class="material-symbols-outlined text-3xl">add_circle</span>
+            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Add</span>
+        </a>
+        <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'recipes' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
+            href="{% url 'pages:recipes' %}">
+            <span class="material-symbols-outlined">menu_book</span>
+            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Recipes</span>
+        </a>
+        <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'settings' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
+            href="{% url 'pages:settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Settings</span>
+        </a>
+    </nav>
+    {% endblock %}
+
+</body>
+
+</html>
