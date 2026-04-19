@@ -1,92 +1,95 @@
-# Projecte Web - Aplicació Django
+# Web Project - Django Application
 
-## 1. Informació general
+## 1. General Information
 
-Assignatura: Projecte Web  
-Curs: 2025/2026  
-Professors: Roberto Garcia i David Sarrat  
+Course: Web Project  
+Academic Year: 2025/2026  
+Professors: Roberto Garcia and David Sarrat  
 
-Repositori del projecte:  
+Project repository:  
 https://github.com/DiogoPires2003/projecteWeb.git  
 
-Aquest projecte consisteix en el desenvolupament d’una aplicació web utilitzant el framework Django, seguint els requisits definits a l’enunciat de la pràctica.
+This project consists of the development of a web application using the Django framework, following the requirements defined in the assignment description.
 
----
+***
 
-## 2. Model de dades
+## 2. Data Model
 
-La base de dades utilitzada és la mateixa que es va definir a la primera entrega del projecte. Aquesta decisió s’ha pres amb l’objectiu de mantenir la coherència entre fases i aprofitar un model que ja havia estat validat prèviament.
+The database used is the same one defined in the first delivery of the project. This decision was made to maintain consistency between phases and to take advantage of a model that had already been previously validated.
 
-El model està format per diverses entitats relacionades entre si, complint amb el requisit d’incloure com a mínim tres entitats amb relacions significatives. A més, s’ha mantingut una estructura relacional coherent i normalitzada per garantir la integritat de les dades.
+The model is composed of several related entities, fulfilling the requirement of including at least three entities with meaningful relationships. Additionally, a coherent and normalized relational structure has been maintained to ensure data integrity.
 
----
+***
 
-## 3. Sistema d’autenticació
+## 3. Authentication System
 
-Per a la gestió d’usuaris, s’ha utilitzat el sistema d’autenticació integrat de Django (`django.contrib.auth`). Aquest sistema permet gestionar de manera segura el registre i l’inici de sessió dels usuaris.
+For user management, Django’s built-in authentication system (`django.contrib.auth`) has been used. This system allows secure handling of user registration and login.
 
-S’han implementat les funcionalitats següents:
-- Registre d’usuaris
-- Inici i tancament de sessió
-- Restricció d’accés a determinades funcionalitats segons autenticació
+The following functionalities have been implemented:
+- User registration
+- Login and logout
+- Access restriction to certain functionalities based on authentication
 
-Aquesta decisió s’ha pres per garantir un nivell adequat de seguretat, evitar implementar mecanismes propis innecessaris i facilitar la integració amb la resta del framework.
+This decision was made to ensure an adequate level of security, avoid implementing unnecessary custom mechanisms, and facilitate integration with the rest of the framework.
 
----
+***
 
-## 4. Interfície d’usuari
+## 4. User Interface
 
-Pel que fa a la interfície, s’ha optat per un disseny senzill, clar i funcional. L’objectiu principal ha estat garantir una bona experiència d’usuari i facilitar la navegació per l’aplicació.
+Regarding the interface, a simple, clear, and functional design has been chosen. The main objective has been to ensure a good user experience and facilitate navigation within the application.
 
-S’han utilitzat colors neutres combinats amb un color principal per destacar accions importants. Aquesta elecció respon a criteris de llegibilitat, coherència visual i accessibilitat.
+Neutral colors have been used, combined with a primary color to highlight important actions. This choice is based on readability, visual consistency, and accessibility criteria.
 
----
+***
 
-## 5. Navegació i visualització de dades
+## 5. Navigation and Data Visualization
 
-S’han desenvolupat diferents pàgines que permeten interactuar amb les dades de l’aplicació, com ara:
-- Pàgines de llistat d’elements
-- Pàgines de detall
-- Pàgina principal
+Different pages have been developed to allow interaction with the application’s data, such as:
+- List pages
+- Detail pages
+- Home page
 
-Aquestes funcionalitats permeten explorar la informació sense necessitat d’accedir al panell d’administració, millorant així la usabilitat general del sistema.
+These features allow users to explore the information without needing to access the administration panel, thus improving the overall usability of the system.
 
----
+***
 
-## 6. Panell d’administració
+## 6. Administration Panel
 
-S’ha activat el panell d’administració de Django per permetre la gestió de les dades de manera eficient. A través d’aquest panell es poden crear, modificar i eliminar instàncies de les diferents entitats del sistema.
+The Django administration panel has been enabled to allow efficient data management. Through this panel, it is possible to create, modify, and delete instances of the system’s different entities.
 
-Aquesta funcionalitat és especialment útil durant el desenvolupament i les proves, així com per complir amb els requisits de la pràctica.
+This functionality is especially useful during development and testing, as well as for meeting the project requirements.
 
----
+***
 
-## 7. Desplegament amb Docker
+## 7. Deployment with Docker
 
-El projecte inclou una configuració basada en Docker i docker-compose que permet executar l’aplicació de manera senzilla i reproduïble.
+The project includes a configuration based on Docker and docker-compose that allows the application to be run easily and reproducibly.
 
-Aquesta decisió facilita el desplegament en diferents entorns i assegura que l’aplicació funcioni de manera consistent independentment del sistema on s’executi.
+This decision facilitates deployment across different environments and ensures that the application behaves consistently regardless of the system it runs on.
 
----
+***
 
-## 8. Bones pràctiques (12-factor)
+## 8. Best Practices (12-factor)
 
-En la mesura del possible, el desenvolupament ha seguit les recomanacions del model 12-factor, especialment en aspectes com:
-- Separació entre configuració i codi
-- Ús de variables d’entorn
-- Facilitat de desplegament
+As much as possible, development has followed the recommendations of the 12-factor app methodology, especially in aspects such as:
+- Separation between configuration and code
+- Use of environment variables
+- Ease of deployment
 
-Aquest enfocament millora la mantenibilitat i escalabilitat de l’aplicació.
+This approach improves the maintainability and scalability of the application.
 
----
+***
 
-## 9. Instruccions d’execució
+## 9. Execution Instructions
 
-Requisits previs:
+Prerequisites:
 - Docker
 - Docker Compose
 
-Per executar l’aplicació, cal executar la següent comanda:
+To run the application, execute the following command:
 
 ```bash
 docker-compose up --build
+```
+
+Fuentes
