@@ -1,0 +1,80 @@
+{% extends "pages/base.html" %}
+
+{% block title %}Search: {{ query }} - FlavorLoop{% endblock %}
+
+{% block content %}
+<main class="pt-24 pb-32 max-w-7xl mx-auto px-6">
+    <!-- Search Header -->
+    <section class="mb-10">
+        <form action="{% url 'pages:search' %}" method="get" class="relative max-w-2xl">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+            <input
+                class="w-full pl-12 pr-6 py-4 rounded-xl bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm font-body text-on-surface-variant placeholder:text-outline"
+                type="text" name="q" value="{{ query }}" placeholder="Search ingredients or products..." />
+            <button type="submit" class="sr-only">Search</button>
+        </form>
+        {% if query %}
+        <p class="mt-4 text-on-surface-variant">
+            Results for <span class="font-semibold text-on-surface">"{{ query }}"</span>
+            {% if products %}&mdash; {{ products|length }} products found{% endif %}
+        </p>
+        {% endif %}
+    </section>
+
+    <!-- Results Grid -->
+    {% if products %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for product in products %}
+        <div class="bg-surface-container-lowest rounded-xxl overflow-hidden shadow-sm hover:shadow-lg transition-all group">
+            <!-- Product Image -->
+            <div class="aspect-[4/3] bg-surface-container-high relative overflow-hidden">
+                {% if product.image_url %}
+                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     src="{{ product.image_url }}"
+                     alt="{{ product.name }}" />
+                {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-outline text-6xl">restaurant</span>
+                </div>
+                {% endif %}
+                <!-- Nutriscore Badge -->
+                {% if product.nutriscore and product.nutriscore != "UNKNOWN" %}
+                <span class="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+                    {% if product.nutriscore == 'A' %}bg-green-600 text-white
+                    {% elif product.nutriscore == 'B' %}bg-green-400 text-white
+                    {% elif product.nutriscore == 'C' %}bg-yellow-400 text-on-surface
+                    {% elif product.nutriscore == 'D' %}bg-orange-500 text-white
+                    {% elif product.nutriscore == 'E' %}bg-red-600 text-white
+                    {% else %}bg-surface-container text-on-surface-variant{% endif %}">
+                    {{ product.nutriscore }}
+                </span>
+                {% endif %}
+            </div>
+            <!-- Product Info -->
+            <div class="p-5">
+                <h4 class="font-headline text-lg text-on-surface leading-tight mb-1 line-clamp-2">{{ product.name }}</h4>
+                <p class="text-xs text-on-surface-variant mb-2">{{ product.brands }}</p>
+                {% if product.quantity %}
+                <p class="text-xs text-outline">{{ product.quantity }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif query %}
+    <!-- No Results -->
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+        <span class="material-symbols-outlined text-outline text-7xl mb-4">search_off</span>
+        <h3 class="font-headline text-2xl text-on-surface mb-2">No products found</h3>
+        <p class="text-on-surface-variant max-w-md">Try searching with different terms or check the spelling.</p>
+    </div>
+    {% else %}
+    <!-- Initial State -->
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+        <span class="material-symbols-outlined text-outline text-7xl mb-4">search</span>
+        <h3 class="font-headline text-2xl text-on-surface mb-2">Search for ingredients or products</h3>
+        <p class="text-on-surface-variant max-w-md">Enter a term above to discover products from the Open Food Facts database.</p>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

@@ -15,6 +15,7 @@ urlpatterns = [
     path("recipe/", views.recipe_info, name="recipe_info"),
     path("ingredients/", views.ingredients, name="ingredients"),
     path("recipes/", views.recipes, name="recipes"),
+    path("search/", views.search, name="search"),
     
     # Password Reset (Django built-in)
     path('password-reset/', 
