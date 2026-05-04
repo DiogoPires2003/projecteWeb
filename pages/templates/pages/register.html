@@ -2,34 +2,62 @@
 
 {% block title %}FlavorLoop - Register{% endblock %}
 
+{% block extra_head %}
+<style>
+  .field-tips ul {
+    list-style-type: disc !important;
+    padding-left: 1rem !important;
+    margin-top: 0.25rem;
+  }
+  .field-tips li {
+    margin-bottom: 0.25rem;
+  }
+</style>
+{% endblock %}
+
 {% block navbar %}{% endblock %}
 {% block bottom_nav %}{% endblock %}
 
 {% block content %}
-<body class="bg-surface text-on-surface flex items-center justify-center min-h-screen p-6">
-  <!-- Auth Container -->
-  <main class="w-full max-w-[440px] flex flex-col items-center mt-12 mb-12">
-    <!-- Minimalist Logo Section -->
-    <div class="mb-12 flex flex-col items-center space-y-4">
-      <div class="w-16 h-16 bg-primary-container/20 rounded-full flex items-center justify-center">
-        <span class="material-symbols-outlined text-primary text-4xl">person_add</span>
+<div class="fixed inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-surface to-secondary/5 -z-10"></div>
+
+<div class="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+  <!-- Back to Home Floating Button -->
+  <a href="{% url 'pages:home' %}" 
+     class="absolute top-4 left-4 sm:top-8 sm:left-8 p-3 rounded-full bg-surface-container-low/50 backdrop-blur-md border border-outline-variant/10 text-on-surface-variant hover:bg-primary-container/20 hover:text-primary transition-all group z-10 shadow-sm"
+     title="Back to recipes">
+    <span class="material-symbols-outlined text-xl sm:text-2xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
+  </a>
+  <!-- Subtle Bokeh Elements -->
+  <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+  <!-- Auth Card Container -->
+  <main class="w-full max-w-[440px] animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
+    <!-- Brand Identity -->
+    <div class="mb-6 sm:mb-10 flex flex-col items-center space-y-3">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 bg-primary-container/20 rounded-2xl flex items-center justify-center shadow-inner-lg -rotate-3 hover:rotate-0 transition-transform duration-500">
+        <span class="material-symbols-outlined text-primary text-4xl sm:text-5xl">person_add</span>
       </div>
-      <h1 class="font-headline italic font-bold text-4xl tracking-tight text-primary">FlavorLoop</h1>
-      <p class="text-on-surface-variant text-sm font-medium tracking-wide">JOIN OUR CULINARY COMMUNITY</p>
+      <div class="text-center">
+        <h1 class="font-headline italic font-bold text-4xl sm:text-5xl tracking-tight text-primary">FlavorLoop</h1>
+        <p class="text-on-surface-variant text-[8px] sm:text-[10px] font-bold tracking-[0.2em] uppercase mt-1 opacity-70">Join our culinary community</p>
+      </div>
     </div>
-    <!-- Content Card: Tonal Layering -->
-    <div
-      class="w-full bg-surface-container-lowest rounded-xl p-8 md:p-10 shadow-[0_32px_64px_-12px_rgba(71,101,80,0.06)]">
-      <div class="mb-8">
-        <h2 class="font-headline text-2xl font-semibold text-on-surface">Create an account</h2>
-        <p class="text-on-surface-variant text-sm mt-1">Start your journey with us today.</p>
+
+    <!-- Glassy Card -->
+    <div class="w-full bg-surface-container-lowest/80 backdrop-blur-xl rounded-[2rem] p-6 sm:p-10 md:p-12 shadow-[0_24px_50px_-12px_rgba(71,101,80,0.12)] border border-white/40">
+      <div class="mb-8 sm:mb-10">
+        <h2 class="font-headline text-2xl sm:text-3xl font-semibold text-on-surface">Get Started</h2>
+        <p class="text-on-surface-variant text-xs sm:text-sm mt-2 font-medium">Create your credentials to continue.</p>
       </div>
 
       {% if messages %}
-      <div class="mb-6 space-y-2">
+      <div class="mb-8 space-y-3">
         {% for message in messages %}
-        <div class="p-3 rounded-lg text-sm {% if message.tags == 'error' %}bg-error-container text-on-error-container{% else %}bg-primary-container/20 text-on-primary-container{% endif %}">
-          {{ message }}
+        <div class="flex items-center gap-3 p-4 rounded-xl text-sm animate-in slide-in-from-top-2 duration-300 {% if message.tags == 'error' %}bg-error-container/80 text-on-error-container border border-error/10{% else %}bg-primary-container/20 text-on-primary-container border border-primary/10{% endif %}">
+          <span class="material-symbols-outlined text-lg">{% if message.tags == 'error' %}error{% else %}info{% endif %}</span>
+          <p class="font-medium">{{ message }}</p>
         </div>
         {% endfor %}
       </div>
@@ -40,54 +68,72 @@
         {% csrf_token %}
         
         {% for field in form %}
-        <div class="space-y-2">
-          <label class="block text-xs font-semibold text-on-surface-variant tracking-wider uppercase" for="{{ field.id_for_label }}">
+        <div class="space-y-2 group">
+          <label class="block text-xs font-bold text-on-surface-variant/80 tracking-wider uppercase ml-1" for="{{ field.id_for_label }}">
             {{ field.label }}
           </label>
-          <input
-            class="w-full h-12 px-4 bg-surface-container-highest border-none rounded-lg focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary/30 transition-all text-on-surface placeholder:text-outline-variant"
-            id="{{ field.id_for_label }}" 
-            name="{{ field.html_name }}" 
-            type="{{ field.field.widget.input_type|default:'text' }}" 
-            required />
+          <div class="relative">
+            <input
+              class="w-full h-14 pl-12 pr-4 bg-surface-container/50 border-2 border-transparent rounded-2xl focus:bg-surface-container-lowest focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-on-surface placeholder:text-outline-variant font-medium"
+              id="{{ field.id_for_label }}" 
+              name="{{ field.html_name }}" 
+              type="{{ field.field.widget.input_type|default:'text' }}" 
+              placeholder="Enter {{ field.label|lower }}"
+              required />
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors">
+              {% if 'password' in field.name|lower %}lock{% elif 'email' in field.name|lower %}mail{% else %}person{% endif %}
+            </span>
+          </div>
           {% if field.help_text %}
-          <p class="text-[10px] text-outline leading-tight">{{ field.help_text }}</p>
+          <div class="text-[10px] text-on-surface-variant/60 leading-relaxed px-1 mt-2 bg-surface-container/30 p-2 rounded-lg border border-outline-variant/10">
+            <div class="flex items-start gap-1">
+              <span class="material-symbols-outlined text-[12px] mt-0.5">info</span>
+              <div class="field-tips">
+                {{ field.help_text|safe }}
+              </div>
+            </div>
+          </div>
           {% endif %}
           {% if field.errors %}
           {% for error in field.errors %}
-          <p class="text-xs text-error mt-1">{{ error }}</p>
+          <p class="text-xs text-error mt-1 px-1 font-medium">{{ error }}</p>
           {% endfor %}
           {% endif %}
         </div>
         {% endfor %}
 
-        <!-- Primary CTA -->
         <button
-          class="w-full h-14 bg-primary text-on-primary font-semibold rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 shadow-sm"
+          id="submit-btn"
+          class="w-full h-14 bg-primary text-on-primary font-bold rounded-2xl hover:bg-primary/90 hover:shadow-lg hover:translate-y-[-2px] active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 shadow-md disabled:opacity-50 disabled:cursor-not-allowed mt-8"
           type="submit">
-          <span>Create Account</span>
-          <span class="material-symbols-outlined text-xl">how_to_reg</span>
+          <span id="btn-text" class="text-base">Join the Club</span>
+          <span id="btn-icon" class="material-symbols-outlined text-2xl">how_to_reg</span>
         </button>
       </form>
     </div>
+
     <!-- Toggle Link -->
-    <p class="mt-8 text-on-surface-variant text-sm">
+    <p class="mt-10 text-on-surface-variant text-sm font-medium">
       Already have an account?
-      <a class="text-secondary font-bold hover:underline transition-all underline-offset-4 decoration-secondary/30 ml-1"
-        href="{% url 'pages:login' %}">Sign in</a>
+      <a class="text-primary font-bold hover:text-secondary transition-all underline-offset-4 hover:underline ml-1"
+        href="{% url 'pages:login' %}">Sign in here</a>
     </p>
-    <!-- Footer Decoration -->
-    <div class="mt-16 flex items-center space-x-6 opacity-30">
-      <div class="h-[1px] w-12 bg-outline"></div>
-      <span class="material-symbols-outlined text-sm">eco</span>
-      <div class="h-[1px] w-12 bg-outline"></div>
-    </div>
+
   </main>
-  <!-- Decorative Organic Elements (Asymmetric) -->
-  <div
-    class="fixed top-0 left-0 w-64 h-64 bg-primary/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl pointer-events-none">
-  </div>
-  <div
-    class="fixed bottom-0 right-0 w-96 h-96 bg-secondary/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl pointer-events-none">
-  </div>
+</div>
+
+<script>
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const btn = document.getElementById('submit-btn');
+    const text = document.getElementById('btn-text');
+    const icon = document.getElementById('btn-icon');
+    
+    btn.disabled = true;
+    text.textContent = 'Creating account...';
+    icon.textContent = 'progress_activity';
+    icon.classList.add('animate-spin');
+    
+    btn.classList.add('opacity-80', 'scale-[0.98]');
+  });
+</script>
 {% endblock %}
