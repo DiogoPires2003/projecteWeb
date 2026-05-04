@@ -86,39 +86,21 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        body {
-            min-height: max(884px, 100dvh);
-            font-family: 'Inter', sans-serif;
-        }
-
-        h1, h2, h3, h4, h5, h6, .font-serif {
-            font-family: 'Newsreader', serif;
-        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { min-height: 100dvh; font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-serif { font-family: 'Newsreader', serif; }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 
 <body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
-    {% block navbar %}
-    <!-- TopAppBar -->
-    <header
-        class="bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-lg fixed top-0 w-full z-50 shadow-sm shadow-emerald-900/5">
+    <!-- Fixed TopAppBar - Always Visible -->
+    <header class="bg-stone-50/80 dark:bg-stone-900/80 backdrop-blur-lg fixed top-0 w-full z-40 shadow-sm shadow-emerald-900/5">
         <div class="flex items-center justify-between px-6 py-4 w-full">
             <div class="flex items-center gap-4">
                 <span class="material-symbols-outlined text-emerald-900 dark:text-emerald-100 cursor-pointer">menu</span>
-                <a href="{% url 'pages:home' %}" class="font-serif italic font-bold text-emerald-900 dark:text-emerald-50 text-2xl tracking-tight">
-                    FlavorLoop
-                </a>
+                <a href="{% url 'pages:home' %}" class="font-serif italic font-bold text-emerald-900 dark:text-emerald-50 text-2xl tracking-tight">FlavorLoop</a>
             </div>
             <div class="hidden md:flex items-center gap-8">
                 <a class="{% if request.resolver_match.url_name == 'home' %}text-emerald-900 dark:text-emerald-50 font-bold{% else %}text-emerald-800/60 dark:text-emerald-200/60 hover:text-emerald-900{% endif %} transition-colors"
@@ -143,14 +125,12 @@
             </div>
             {% if user.is_authenticated %}
             <div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center overflow-hidden">
-                <img class="w-full h-full object-cover"
-                    alt="Profile"
+                <img class="w-full h-full object-cover" alt="Profile"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFmJTOTI3KpMGMt4c7MSfwPSzjAAZfJ9zhTXFvem5ETkFQhCQhxndv8JipWxWB5DnQi6R_P38k841i0fe-uSgkeY2Q7g630tIM2jua20VEMgHlhlXuAYQWXZGZHi4ypgp25ytNxaMoZtp7TzuS7AXI-x8t2ydOC4MPH2QWOC-dfXlnhrBvfLV8fIHI8_LH25NgFuFTO8GvCWqFKn8OzPWEHomuL5GLIWq6GdlaxKAhyDQsLSHseZfZxsANSHM6ofCw6D2PUsgZao8" />
             </div>
             {% endif %}
         </div>
     </header>
-    {% endblock %}
 
     {% if messages %}
     <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-6 pointer-events-none">
@@ -175,39 +155,34 @@
 
     {% block content %}{% endblock %}
 
-
-    {% block bottom_nav %}
-    <!-- BottomNavBar -->
-    <nav
-        class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xl rounded-t-3xl z-50 border-t border-stone-200/20 shadow-[0_-4px_20px_0_rgba(71,101,80,0.06)] md:hidden">
+    <!-- Fixed BottomNavBar - Always Visible on Mobile -->
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xl rounded-t-3xl z-40 border-t border-stone-200/20 shadow-[0_-4px_20px_0_rgba(71,101,80,0.06)] md:hidden">
         <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'home' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
             href="{% url 'pages:home' %}">
             <span class="material-symbols-outlined">home</span>
-            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Home</span>
+            <span class="text-[11px] font-medium tracking-wide uppercase mt-1">Home</span>
         </a>
         <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'ingredients' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
             href="{% url 'pages:ingredients' %}">
             <span class="material-symbols-outlined">kitchen</span>
-            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Pantry</span>
+            <span class="text-[11px] font-medium tracking-wide uppercase mt-1">Pantry</span>
         </a>
-        <a class="flex flex-col items-center justify-center text-stone-500 px-3 py-1.5"
-            href="{% url 'pages:recipe_info' %}">
+        <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'create_recipe' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5"
+            href="{% url 'pages:create_recipe' %}">
             <span class="material-symbols-outlined text-3xl">add_circle</span>
-            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Add</span>
+            <span class="text-[11px] font-medium tracking-wide uppercase mt-1">Add</span>
         </a>
         <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'recipes' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
             href="{% url 'pages:recipes' %}">
             <span class="material-symbols-outlined">menu_book</span>
-            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Recipes</span>
+            <span class="text-[11px] font-medium tracking-wide uppercase mt-1">Recipes</span>
         </a>
         <a class="flex flex-col items-center justify-center {% if request.resolver_match.url_name == 'settings' %}text-emerald-900 bg-emerald-100/50{% else %}text-stone-500{% endif %} rounded-xl px-3 py-1.5 transition-all"
             href="{% url 'pages:settings' %}">
             <span class="material-symbols-outlined">settings</span>
-            <span class="font-sans text-[11px] font-medium tracking-wide uppercase mt-1">Settings</span>
+            <span class="text-[11px] font-medium tracking-wide uppercase mt-1">Settings</span>
         </a>
     </nav>
-    {% endblock %}
 
 </body>
-
 </html>

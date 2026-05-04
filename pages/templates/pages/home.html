@@ -11,14 +11,28 @@
             <h2 class="font-headline text-5xl md:text-7xl text-on-surface leading-tight mb-6">
                 Savor the <span class="italic text-primary">Art</span> of <br />Home Cooking.
             </h2>
-            <form action="{% url 'pages:search' %}" method="get" class="relative max-w-xl">
-                <span
-                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-                <input
-                    class="w-full pl-12 pr-6 py-4 rounded-xl bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm font-body text-on-surface-variant placeholder:text-outline"
-                    placeholder="Search ingredients or dishes" type="text" name="q" />
-                <button type="submit" class="sr-only">Search</button>
-            </form>
+            <!-- Search with filter tabs -->
+            <div id="home-search-wrapper" class="relative max-w-xl">
+                <div class="flex gap-2 mb-2">
+                    <button type="button" id="tab-ingredients" class="search-tab active px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary text-on-primary transition-all" data-type="ingredients">Ingredients</button>
+                    <button type="button" id="tab-recipes" class="search-tab px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface-variant transition-all" data-type="recipes">Recipes</button>
+                </div>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">search</span>
+                    <input id="home-search-input"
+                        class="w-full pl-12 pr-6 py-4 rounded-xl bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm font-body text-on-surface placeholder:text-outline"
+                        placeholder="Search ingredients from Open Food Facts..." type="text" autocomplete="off" />
+                </div>
+                <div id="home-search-dropdown" class="absolute z-50 w-full mt-1 bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant/20 max-h-72 overflow-y-auto hidden"></div>
+            </div>
+            <!-- Live Results Section -->
+            <div id="home-search-results" class="hidden mt-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 id="results-label" class="text-sm font-bold uppercase tracking-widest text-outline"></h3>
+                    <span id="results-type-badge" class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-primary/10 text-primary"></span>
+                </div>
+                <div id="results-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
             <div class="mt-6 flex gap-4 overflow-x-auto hide-scrollbar">
                 <span
                     class="text-xs uppercase tracking-widest text-outline font-bold flex items-center shrink-0">Popular:</span>
@@ -277,4 +291,175 @@
         </div>
     </section>
 </main>
+
+<script>
+const searchInput = document.getElementById('home-search-input');
+const dropdown = document.getElementById('home-search-dropdown');
+const resultsSection = document.getElementById('home-search-results');
+const resultsGrid = document.getElementById('results-grid');
+const resultsLabel = document.getElementById('results-label');
+const resultsTypeBadge = document.getElementById('results-type-badge');
+const tabIngredients = document.getElementById('tab-ingredients');
+const tabRecipes = document.getElementById('tab-recipes');
+let currentType = 'ingredients';
+
+tabIngredients.addEventListener('click', () => switchTab('ingredients'));
+tabRecipes.addEventListener('click', () => switchTab('recipes'));
+
+function switchTab(type) {
+    currentType = type;
+    if (type === 'ingredients') {
+        tabIngredients.className = 'search-tab active px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary text-on-primary transition-all';
+        tabRecipes.className = 'search-tab px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface-variant transition-all';
+        searchInput.placeholder = 'Search ingredients from Open Food Facts...';
+    } else {
+        tabRecipes.className = 'search-tab active px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary text-on-primary transition-all';
+        tabIngredients.className = 'search-tab px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface-variant transition-all';
+        searchInput.placeholder = 'Search recipes...';
+    }
+    resultsSection.classList.add('hidden');
+    resultsGrid.innerHTML = '';
+    dropdown.classList.add('hidden');
+    searchInput.value = '';
+    searchInput.focus();
+}
+
+searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (this.value.trim().length >= 2) {
+            if (currentType === 'ingredients') {
+                doIngredientSearch(this.value.trim());
+            } else {
+                doRecipeSearch(this.value.trim());
+            }
+        }
+    }
+});
+
+let searchTimeout;
+searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    const q = this.value.trim();
+    if (q.length < 2) { dropdown.classList.add('hidden'); return; }
+    searchTimeout = setTimeout(() => {
+        if (currentType === 'ingredients') {
+            doIngredientSearch(q);
+        } else {
+            doRecipeSearch(q);
+        }
+    }, 400);
+});
+
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !dropdown.contains(e.target) && !resultsSection.contains(e.target)) {
+        dropdown.classList.add('hidden');
+    }
+});
+
+// ===== INGREDIENT SEARCH (Open Food Facts via server proxy) =====
+function doIngredientSearch(q) {
+    const apiUrl = "{% url 'pages:search_ingredients_api' %}" + `?q=${encodeURIComponent(q)}`;
+    dropdown.innerHTML = '<div class="p-4 text-center text-sm text-on-surface-variant">Searching...</div>';
+    dropdown.classList.remove('hidden');
+    resultsSection.classList.add('hidden');
+
+    fetch(apiUrl, { credentials: 'same-origin' })
+        .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
+        .then(data => {
+            if (currentType !== 'ingredients') return;
+            dropdown.innerHTML = '';
+            if (!data.results || data.results.length === 0) {
+                dropdown.innerHTML = '<div class="p-4 text-center text-sm text-on-surface-variant">No ingredients found</div>';
+                return;
+            }
+            // Show dropdown with click-to-add
+            data.results.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-3 hover:bg-surface-container cursor-pointer border-b border-outline-variant/10 last:border-0';
+                const img = item.image ? `<img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-surface-container-high shrink-0" />` : '<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-outline text-lg">eco</span></div>';
+                div.innerHTML = `${img}<div class="flex-1 min-w-0"><div class="text-sm font-medium text-on-surface truncate">${item.name}</div><div class="text-xs text-on-surface-variant">${item.brands || ''}</div></div><div class="text-xs text-outline shrink-0">${item.nutriments.kcal || 0} kcal</div>`;
+                dropdown.appendChild(div);
+            });
+            // Also show inline results grid
+            showIngredientResults(data.results, q);
+        })
+        .catch(err => {
+            console.error('Ingredient search error:', err);
+            dropdown.innerHTML = '<div class="p-4 text-center text-sm text-error">Error loading results</div>';
+        });
+}
+
+function showIngredientResults(items, query) {
+    resultsSection.classList.remove('hidden');
+    resultsTypeBadge.textContent = 'Ingredients';
+    resultsLabel.textContent = `${items.length} ingredient${items.length !== 1 ? 's' : ''} found for "${query}"`;
+    resultsGrid.innerHTML = '';
+    items.slice(0, 12).forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'bg-surface-container-lowest rounded-xxl overflow-hidden shadow-sm hover:shadow-lg transition-all group cursor-pointer';
+        const imgHTML = item.image
+            ? `<div class="relative aspect-[4/3]"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${item.image}" alt="${item.name}" /></div>`
+            : `<div class="relative aspect-[4/3] bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-outline text-6xl">eco</span></div>`;
+        card.innerHTML = `${imgHTML}<div class="p-5"><h3 class="font-serif text-lg font-bold text-on-surface leading-tight mb-1">${item.name}</h3><p class="text-xs text-on-surface-variant mb-3">${item.brands || ''}</p><div class="grid grid-cols-4 gap-2 text-center"><div><div class="text-sm font-bold text-primary">${item.nutriments.kcal || 0}</div><div class="text-[10px] text-outline">Kcal</div></div><div><div class="text-sm font-bold text-secondary">${item.nutriments.protein || 0}g</div><div class="text-[10px] text-outline">Protein</div></div><div><div class="text-sm font-bold text-tertiary">${item.nutriments.carbs || 0}g</div><div class="text-[10px] text-outline">Carbs</div></div><div><div class="text-sm font-bold text-tertiary">${item.nutriments.fat || 0}g</div><div class="text-[10px] text-outline">Fat</div></div></div></div>`;
+        resultsGrid.appendChild(card);
+    });
+}
+
+// ===== RECIPE SEARCH (All users' recipes) =====
+function doRecipeSearch(q) {
+    const apiUrl = "{% url 'pages:search_recipes_api' %}" + `?q=${encodeURIComponent(q)}`;
+    dropdown.classList.add('hidden');
+    resultsSection.classList.remove('hidden');
+    resultsTypeBadge.textContent = 'Recipes';
+    resultsGrid.innerHTML = '<div class="col-span-full text-center py-4 text-on-surface-variant">Loading...</div>';
+
+    fetch(apiUrl, { credentials: 'same-origin' })
+        .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
+        .then(data => {
+            if (currentType !== 'recipes') return;
+            resultsLabel.textContent = `${data.results.length} recipe${data.results.length !== 1 ? 's' : ''} found for "${q}"`;
+            resultsGrid.innerHTML = '';
+            if (data.results.length === 0) {
+                resultsGrid.innerHTML = `<div class="col-span-full text-center py-8 text-on-surface-variant">No recipes found. <a href="{% url 'pages:create_recipe' %}" class="text-primary font-semibold underline">Create one</a></div>`;
+                return;
+            }
+            data.results.forEach(r => {
+                const card = document.createElement('article');
+                card.className = 'bg-surface-container-lowest rounded-xxl overflow-hidden shadow-sm hover:shadow-lg transition-all group';
+                const saveIcon = r.saved ? 'bookmark' : 'bookmark_border';
+                const imgHTML = r.image_url
+                    ? `<div class="relative aspect-[4/3]"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${r.image_url}" alt="${r.title}" onclick="window.location.href='/recipe/${r.id}/'" /><div class="absolute top-3 right-3 flex gap-2"><button onclick="toggleSave(event, ${r.id}, this)" class="w-8 h-8 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center hover:bg-surface transition-colors"><span class="material-symbols-outlined text-sm text-secondary" style="font-variation-settings:'FILL'${r.saved ? 1 : 0}">${saveIcon}</span></button><span class="bg-surface/80 backdrop-blur-sm px-2 py-1 rounded-full text-[10px] font-bold text-secondary">${r.difficulty}</span></div></div>`
+                    : `<div class="relative aspect-[4/3] bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-outline text-6xl">restaurant</span><div class="absolute top-3 right-3 flex gap-2"><button onclick="toggleSave(event, ${r.id}, this)" class="w-8 h-8 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center hover:bg-surface transition-colors"><span class="material-symbols-outlined text-sm text-secondary" style="font-variation-settings:'FILL'${r.saved ? 1 : 0}">${saveIcon}</span></button><span class="bg-surface/80 backdrop-blur-sm px-2 py-1 rounded-full text-[10px] font-bold text-secondary">${r.difficulty}</span></div></div>`;
+                card.innerHTML = `${imgHTML}<div class="p-5"><div class="flex items-center gap-2 mb-2">${r.category ? `<span class="text-[10px] font-bold uppercase tracking-widest text-primary-container">${r.category}</span><span class="w-1 h-1 rounded-full bg-outline-variant"></span>` : ''}<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">${r.prep_time_minutes} min</span><span class="w-1 h-1 rounded-full bg-outline-variant"></span><span class="text-[10px] font-bold uppercase tracking-widest text-outline">@${r.owner}</span></div><h3 class="font-serif text-lg font-bold text-on-surface leading-tight mb-1 cursor-pointer hover:text-primary transition-colors" onclick="window.location.href='/recipe/${r.id}/'">${r.title}</h3><p class="text-xs text-on-surface-variant line-clamp-2">${r.description || ''}</p></div>`;
+                resultsGrid.appendChild(card);
+            });
+        })
+        .catch(err => {
+            console.error('Recipe search error:', err);
+            resultsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-error">Error loading recipes</div>';
+        });
+}
+
+function toggleSave(e, recipeId, btn) {
+    e.stopPropagation();
+    fetch(`/recipe/${recipeId}/save/`, { method: 'POST', headers: { 'X-CSRFToken': getCSRFToken() }, credentials: 'same-origin' })
+        .then(r => r.json())
+        .then(data => {
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (data.saved) {
+                icon.style.fontVariationSettings = "'FILL' 1";
+                icon.textContent = 'bookmark';
+            } else {
+                icon.style.fontVariationSettings = "'FILL' 0";
+                icon.textContent = 'bookmark_border';
+            }
+        })
+        .catch(err => console.error('Save error:', err));
+}
+
+function getCSRFToken() {
+    return document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+</script>
 {% endblock %}
