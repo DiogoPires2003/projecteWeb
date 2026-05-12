@@ -11,6 +11,10 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email']
 
 class RecipeForm(forms.ModelForm):
+    category = forms.ChoiceField(
+        choices=[("", "Select category"), ("Quick Meals", "Quick Meals"), ("Vegan", "Vegan"), ("High Protein", "High Protein"), ("Desserts", "Desserts"), ("Fitness", "Fitness")],
+        required=False,
+    )
     class Meta:
         model = Recipe
         fields = ['title', 'description', 'image_url', 'prep_time_minutes', 'servings', 'difficulty', 'category', 'instructions']

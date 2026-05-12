@@ -55,7 +55,14 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
-                    <input type="text" name="category" value="{{ recipe_form.category.value|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-surface-container border-none text-on-surface" />
+                    <select name="category" class="w-full px-4 py-3 rounded-xl bg-surface-container border-none text-on-surface">
+                        <option value="">Select category</option>
+                        <option value="Quick Meals" {% if recipe.category == "Quick Meals" %}selected{% endif %}>Quick Meals</option>
+                        <option value="Vegan" {% if recipe.category == "Vegan" %}selected{% endif %}>Vegan</option>
+                        <option value="High Protein" {% if recipe.category == "High Protein" %}selected{% endif %}>High Protein</option>
+                        <option value="Desserts" {% if recipe.category == "Desserts" %}selected{% endif %}>Desserts</option>
+                        <option value="Fitness" {% if recipe.category == "Fitness" %}selected{% endif %}>Fitness</option>
+                    </select>
                 </div>
             </div>
         </div>

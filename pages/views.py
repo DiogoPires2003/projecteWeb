@@ -15,8 +15,13 @@ from .forms import (
 @login_required
 def search_recipes_api(request):
     query = request.GET.get("q", "").strip()
-    if not query:
+    category = request.GET.get("category", "").strip()
+    if not query and not category:
         recipes = Recipe.objects.all().select_related("owner").order_by("-created_at")[:20]
+    elif category == "Quick Meals":
+        recipes = Recipe.objects.filter(prep_time_minutes__lt=16).select_related("owner").order_by("-created_at")[:20]
+    elif category:
+        recipes = Recipe.objects.filter(category__icontains=category).select_related("owner").order_by("-created_at")[:20]
     else:
         recipes = Recipe.objects.filter(title__icontains=query).select_related("owner").order_by("-created_at")[:20]
     saved_ids = set(SavedRecipe.objects.filter(user=request.user).values_list("recipe_id", flat=True))
@@ -46,7 +51,34 @@ def toggle_save_recipe(request, recipe_id):
     return JsonResponse({"saved": True})
 
 def home(request):
-    return render(request, "pages/home.html")
+    default_recipes = Recipe.objects.all().select_related("owner").order_by("-created_at")[:14]
+    saved_ids = set()
+    if request.user.is_authenticated:
+        saved_ids = set(SavedRecipe.objects.filter(user=request.user).values_list("recipe_id", flat=True))
+    recipes_data = []
+    for r in default_recipes:
+        recipes_data.append({
+            "id": r.id,
+            "title": r.title,
+            "description": r.description,
+            "image_url": r.image_url,
+            "prep_time_minutes": r.prep_time_minutes,
+            "difficulty": r.difficulty,
+            "category": r.category,
+            "ingredients_count": r.ingredients.count(),
+            "owner": r.owner.username,
+            "saved": r.id in saved_ids,
+        })
+    return render(request, "pages/home.html", {
+        "default_recipes": recipes_data,
+        "mood_categories": [
+            {"slug": "Quick Meals", "label": "Quick Meals", "icon": "timer"},
+            {"slug": "Vegan", "label": "Vegan", "icon": "eco"},
+            {"slug": "High Protein", "label": "High Protein", "icon": "fitness_center"},
+            {"slug": "Desserts", "label": "Desserts", "icon": "bakery_dining"},
+            {"slug": "Discover", "label": "Discover", "icon": "more_horiz"},
+        ]
+    })
 
 def login(request):
     if request.user.is_authenticated:
