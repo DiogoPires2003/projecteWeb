@@ -1,141 +1,162 @@
 {% extends "pages/base.html" %}
 
-{% block title %}FlavorLoop - Recipe Details{% endblock %}
-
-{% block navbar %}
-<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
-    <a class="w-10 h-10 rounded-full bg-stone-50/80 backdrop-blur-md flex items-center justify-center text-primary shadow-sm"
-        href="{% url 'pages:recipes' %}">
-        <span class="material-symbols-outlined">arrow_back</span>
-    </a>
-    <button
-        class="w-10 h-10 rounded-full bg-stone-50/80 backdrop-blur-md flex items-center justify-center text-secondary shadow-sm">
-        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
-    </button>
-</header>
-{% endblock %}
-
-{% block bottom_nav %}
-<!-- Bottom Nav Suppressed for Detail View -->
-{% endblock %}
+{% block title %}{{ recipe.title|default:"Recipe Details" }} - FlavorLoop{% endblock %}
 
 {% block content %}
 <main class="pb-32">
+    {% if recipe %}
     <!-- Hero Section -->
-    <div class="relative h-[397px] w-full overflow-hidden">
-        <img class="w-full h-full object-cover"
-            data-alt="Close-up of creamy pesto pasta with fresh basil leaves, pine nuts, and parmesan shavings on a rustic ceramic plate, soft natural window light"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVLYYXwDGd_4SaMyFQJ9-SOQTAhcrHFYe-zYtgtUlyRSra2rocPOVAQAyyMV8JDxcIfoekNAz4a_hAwEzwRB25Un8yB5i9IdqG0ItgqSLKRxc1AQLaRUdm4l6pvDsq-qp_0nVj5mwSfQTtLiegXZ-Ngi7dnKoMC2cxlbkXlDtu9g1sAiIASFeeAWOFQ9Khkt3dXRAi7bRxv3JUgnmlt9uH6_2Hv7SAz45sWThF02k7I-x3TnBjuAFIVL0b9k4_uIkAgjoMQHe7mao" />
+    <div class="relative h-[300px] w-full overflow-hidden bg-surface-container-high">
+        {% if recipe.image_url %}
+        <img class="w-full h-full object-cover" src="{{ recipe.image_url }}" alt="{{ recipe.title }}" />
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center bg-surface-container-high">
+            <span class="material-symbols-outlined text-outline text-8xl">restaurant</span>
+        </div>
+        {% endif %}
         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
     </div>
     <!-- Content Canvas -->
     <div class="relative -mt-10 px-6 rounded-t-[40px] bg-surface min-h-screen pt-8">
         <!-- Info Bar -->
-        <div
-            class="flex justify-between items-center bg-surface-container-lowest rounded-2xl p-5 shadow-[0_8px_30px_rgb(71,101,80,0.06)] mb-8">
+        <div class="flex justify-between items-center bg-surface-container-lowest rounded-2xl p-5 shadow-[0_8px_30px_rgb(71,101,80,0.06)] mb-8">
             <div class="flex flex-col items-center gap-1 border-r border-outline-variant/20 flex-1">
                 <span class="material-symbols-outlined text-primary text-xl">schedule</span>
-                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest font-label">25 min</span>
+                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest">{{ recipe.prep_time_minutes }} min</span>
             </div>
             <div class="flex flex-col items-center gap-1 border-r border-outline-variant/20 flex-1">
                 <span class="material-symbols-outlined text-primary text-xl">bar_chart</span>
-                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest font-label">Easy</span>
+                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest">{{ recipe.difficulty }}</span>
             </div>
             <div class="flex flex-col items-center gap-1 flex-1">
-                <span class="material-symbols-outlined text-primary text-xl">local_fire_department</span>
-                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest font-label">450 kcal</span>
+                <span class="material-symbols-outlined text-primary text-xl">groups</span>
+                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest">{{ recipe.servings }} portions</span>
             </div>
         </div>
         <!-- Title & Bio -->
-        <div class="mb-10 text-center">
-            <h1 class="text-4xl font-headline font-bold text-on-surface mb-3 tracking-tight">Creamy Pesto Pasta</h1>
-            <p class="text-on-surface-variant text-sm leading-relaxed max-w-sm mx-auto italic">
-                "A vibrant, verdant escape on a plate. This silky sauce clings to every ridge of your pasta for a perfect
-                artisanal bite."
-            </p>
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-headline font-bold text-on-surface mb-3 tracking-tight">{{ recipe.title }}</h1>
+            {% if recipe.description %}
+            <p class="text-on-surface-variant text-sm leading-relaxed max-w-sm mx-auto italic">"{{ recipe.description|truncatechars:150 }}"</p>
+            {% endif %}
+            {% if recipe.category %}
+            <span class="inline-block mt-3 px-4 py-1.5 bg-primary-container text-on-primary-container rounded-full text-xs font-semibold">{{ recipe.category }}</span>
+            {% endif %}
         </div>
-        <!-- Tabs Selection -->
-        <div class="flex gap-4 mb-8 justify-center">
-            <button
-                class="px-8 py-2.5 rounded-full bg-primary text-on-primary font-medium text-sm shadow-sm">Ingredients</button>
-            <button
-                class="px-8 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm">Instructions</button>
-        </div>
-        <!-- Ingredients Section (Active) -->
-        <section class="space-y-6">
-            <div class="flex justify-between items-end mb-4">
-                <h2 class="text-2xl font-headline font-bold text-on-surface">The Pantry List</h2>
-                <span class="text-xs font-label text-outline uppercase tracking-widest">6 Items</span>
-            </div>
-            <div class="grid gap-3">
-                <label
-                    class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <input
-                            class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest"
-                            type="checkbox" />
-                        <span class="text-sm font-medium text-on-surface">Artisan Penne Pasta</span>
+        <!-- Nutrition Summary -->
+        <section class="mb-8">
+            <h2 class="text-xl font-headline font-bold text-on-surface mb-4 ml-1">Nutrition Info</h2>
+            {% with nutrition=recipe.get_total_nutrition %}
+            <div class="bg-primary/5 rounded-2xl p-5 border border-primary/10">
+                <div class="grid grid-cols-4 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-headline font-bold text-primary">{{ nutrition.kcal|floatformat:0 }}</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Kcal</div>
                     </div>
-                    <span class="text-sm text-outline font-label">250g</span>
-                </label>
-                <label
-                    class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <input checked=""
-                            class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest"
-                            type="checkbox" />
-                        <span class="text-sm font-medium text-on-surface">Fresh Basil Leaves</span>
+                    <div class="text-center">
+                        <div class="text-2xl font-headline font-bold text-secondary">{{ nutrition.protein|floatformat:1 }}</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Protein (g)</div>
                     </div>
-                    <span class="text-sm text-outline font-label">2 cups</span>
-                </label>
-                <label
-                    class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <input
-                            class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest"
-                            type="checkbox" />
-                        <span class="text-sm font-medium text-on-surface">Toasted Pine Nuts</span>
+                    <div class="text-center">
+                        <div class="text-2xl font-headline font-bold text-tertiary">{{ nutrition.carbs|floatformat:1 }}</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Carbs (g)</div>
                     </div>
-                    <span class="text-sm text-outline font-label">1/4 cup</span>
-                </label>
-                <label
-                    class="flex items-center justify-between p-5 bg-surface-container-low rounded-2xl group transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <input
-                            class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 bg-surface-container-lowest"
-                            type="checkbox" />
-                        <span class="text-sm font-medium text-on-surface">Aged Parmesan Cheese</span>
-                    </div>
-                    <span class="text-sm text-outline font-label">1/2 cup</span>
-                </label>
-            </div>
-        </section>
-        <!-- Preview of Next Section (Instructions Hint) -->
-        <section class="mt-12 opacity-40 blur-[1px]">
-            <h2 class="text-2xl font-headline font-bold text-on-surface mb-6">Preparation</h2>
-            <div class="flex gap-6 mb-8">
-                <div
-                    class="flex-none w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container font-headline font-bold">
-                    1</div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium leading-relaxed">Bring a large pot of salted water to a rolling boil. Add
-                        pasta and cook until al dente.</p>
-                    <div class="mt-4 w-40 h-24 rounded-xl bg-surface-container-highest overflow-hidden">
-                        <img class="w-full h-full object-cover"
-                            data-alt="Hand adding salt to a steaming pot of boiling water on a sleek induction stovetop, modern kitchen setting"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcFMuVdXuajruHK98OAUlONTGO8lkgAZmAzB85a8-HqtwFCS2WOvqEZwDiiYiwndIs_WxGKER7xu9mw5phJZULBJC5n5Nl9-KkKqIECyso1S1Ul4_wG4aDvgPr-Wd-QtPvObZhmLmyNCP4BdVmUCnkIpeHFJenh7XNYW6vgmiHuhAHrSBDwwy1vg7HduxxTmOujNBaZUQbaSC2W65CsY9x8gmi5M8yOpZKXxg2whZfcWHIQdGLaAHufvEF-oFzVu7Ojmpc9VCxp_4" />
+                    <div class="text-center">
+                        <div class="text-2xl font-headline font-bold text-tertiary">{{ nutrition.fat|floatformat:1 }}</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Fat (g)</div>
                     </div>
                 </div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-surface-container rounded-xl p-3">
+                        <div class="text-lg font-bold text-on-surface">{{ nutrition.fiber|floatformat:1 }}g</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Fiber</div>
+                    </div>
+                    <div class="bg-surface-container rounded-xl p-3">
+                        <div class="text-lg font-bold text-on-surface">{{ nutrition.sugars|floatformat:1 }}g</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Sugars</div>
+                    </div>
+                    <div class="bg-surface-container rounded-xl p-3">
+                        <div class="text-lg font-bold text-on-surface">{{ nutrition.salt|floatformat:1 }}g</div>
+                        <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Salt</div>
+                    </div>
+                </div>
+                {% if recipe.servings > 1 %}
+                <p class="text-xs text-on-surface-variant mt-3 text-center">Total for {{ recipe.servings }} servings</p>
+                {% endif %}
+            </div>
+            {% endwith %}
+        </section>
+        <!-- Tabs -->
+        <div class="flex gap-4 mb-8 justify-center">
+            <button onclick="document.getElementById('ingredients-section').scrollIntoView({behavior:'smooth'})"
+                class="px-8 py-2.5 rounded-full bg-primary text-on-primary font-medium text-sm shadow-sm">Ingredients</button>
+            {% if recipe.instructions %}
+            <button onclick="document.getElementById('instructions-section').scrollIntoView({behavior:'smooth'})"
+                class="px-8 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm">Instructions</button>
+            {% endif %}
+        </div>
+        <!-- Ingredients Section -->
+        <section id="ingredients-section" class="space-y-4 mb-12">
+            <div class="flex justify-between items-end mb-4">
+                <h2 class="text-2xl font-headline font-bold text-on-surface">The Pantry List</h2>
+                <span class="text-xs font-label text-outline uppercase tracking-widest">{{ recipe.ingredients.count }} Items</span>
+            </div>
+            {% for ing in recipe.ingredients.all %}
+            {% with scaled=ing.compute_scaled_nutrition %}
+            <div class="bg-surface-container-low rounded-2xl p-5 transition-all">
+                <div class="flex items-center gap-4 mb-3">
+                    {% if ing.api_image %}
+                    <img src="{{ ing.api_image }}" class="w-12 h-12 rounded-lg object-cover bg-surface-container-high" alt="{{ ing.name }}" />
+                    {% else %}
+                    <div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-xl">eco</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex-1">
+                        <div class="text-sm font-semibold text-on-surface">{{ ing.name }}</div>
+                        <div class="text-xs text-on-surface-variant">{{ ing.quantity }}{% if ing.serving_qty %} · {{ ing.serving_qty }}g{% endif %}</div>
+                    </div>
+                    {% if ing.nutrition_kcal > 0 %}
+                    <div class="text-right">
+                        <div class="text-sm font-bold text-primary">{{ scaled.kcal|floatformat:0 }} kcal</div>
+                        <div class="text-[10px] text-on-surface-variant">P:{{ scaled.protein|floatformat:0 }}g C:{{ scaled.carbs|floatformat:0 }}g F:{{ scaled.fat|floatformat:0 }}g</div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if ing.nutrition_kcal > 0 %}
+                <div class="mt-3 flex gap-2 h-1.5 rounded-full overflow-hidden">
+                    {% with total=scaled.protein|add:scaled.carbs|add:scaled.fat %}
+                    {% if total > 0 %}
+                    <div class="bg-primary rounded-full transition-all" style="width: {{ scaled.protein|floatformat:0 }}%"></div>
+                    <div class="bg-secondary rounded-full transition-all" style="width: {{ scaled.carbs|floatformat:0 }}%"></div>
+                    <div class="bg-tertiary rounded-full transition-all" style="width: {{ scaled.fat|floatformat:0 }}%"></div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+            </div>
+            {% endwith %}
+            {% empty %}
+            <p class="text-on-surface-variant text-sm text-center py-6">No ingredients added yet.</p>
+            {% endfor %}
+        </section>
+        <!-- Instructions Section -->
+        {% if recipe.instructions %}
+        <section id="instructions-section" class="mb-12">
+            <h2 class="text-2xl font-headline font-bold text-on-surface mb-6">Preparation</h2>
+            <div class="bg-surface-container-low rounded-2xl p-6">
+                <p class="text-sm font-medium leading-relaxed text-on-surface-variant whitespace-pre-line">{{ recipe.instructions }}</p>
             </div>
         </section>
+        {% endif %}
     </div>
+    {% else %}
+    <div class="flex flex-col items-center justify-center py-32 text-center px-6">
+        <span class="material-symbols-outlined text-outline text-7xl mb-4">restaurant_menu</span>
+        <h3 class="font-headline text-2xl text-on-surface mb-2">Recipe not found</h3>
+        <p class="text-on-surface-variant max-w-md mb-6">This recipe doesn't exist or you don't have permission.</p>
+        <a href="{% url 'pages:recipes' %}" class="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:opacity-90">Back to Recipes</a>
+    </div>
+    {% endif %}
 </main>
-<!-- Floating Action Button (FAB) -->
-<div class="fixed bottom-10 left-0 right-0 flex justify-center z-50 pointer-events-none">
-    <button
-        class="pointer-events-auto flex items-center gap-3 bg-secondary text-on-secondary px-8 py-5 rounded-full shadow-[0_16px_32px_-4px_rgba(159,64,45,0.3)] hover:scale-105 active:scale-95 transition-all">
-        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
-        <span class="font-label font-bold uppercase tracking-widest text-sm">Start Cook Mode</span>
-    </button>
-</div>
 {% endblock %}
