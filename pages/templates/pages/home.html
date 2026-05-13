@@ -11,13 +11,14 @@
             <h2 class="font-headline text-5xl md:text-7xl text-on-surface leading-tight mb-6">
                 Savor the <span class="italic text-primary">Art</span> of <br />Home Cooking.
             </h2>
-            <div class="relative max-w-xl">
+            <form action="{% url 'pages:search' %}" method="get" class="relative max-w-xl">
                 <span
                     class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
                 <input
                     class="w-full pl-12 pr-6 py-4 rounded-xl bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm font-body text-on-surface-variant placeholder:text-outline"
-                    placeholder="Search ingredients or dishes" type="text" />
-            </div>
+                    placeholder="Search ingredients or dishes" type="text" name="q" />
+                <button type="submit" class="sr-only">Search</button>
+            </form>
             <div class="mt-6 flex gap-4 overflow-x-auto hide-scrollbar">
                 <span
                     class="text-xs uppercase tracking-widest text-outline font-bold flex items-center shrink-0">Popular:</span>
