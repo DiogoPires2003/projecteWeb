@@ -12,7 +12,6 @@ from .forms import (
     UserRegisterForm, RecipeForm, RecipeIngredientForm, ProfileForm
 )
 
-@login_required
 def search_recipes_api(request):
     query = request.GET.get("q", "").strip()
     category = request.GET.get("category", "").strip()
@@ -24,7 +23,9 @@ def search_recipes_api(request):
         recipes = Recipe.objects.filter(category__icontains=category).select_related("owner").order_by("-created_at")[:20]
     else:
         recipes = Recipe.objects.filter(title__icontains=query).select_related("owner").order_by("-created_at")[:20]
-    saved_ids = set(SavedRecipe.objects.filter(user=request.user).values_list("recipe_id", flat=True))
+    saved_ids = set()
+    if request.user.is_authenticated:
+        saved_ids = set(SavedRecipe.objects.filter(user=request.user).values_list("recipe_id", flat=True))
     results = []
     for r in recipes:
         results.append({
@@ -203,10 +204,20 @@ def create_recipe(request):
             return redirect("pages:recipes")
         else:
             messages.error(request, "Si us plau, corregeix els errors del formulari.")
-            return render(request, "pages/recipe-create.html", {"recipe_form": recipe_form})
     else:
         recipe_form = RecipeForm()
-    return render(request, "pages/recipe-create.html", {"recipe_form": recipe_form})
+        ingredient_names = ingredient_quantities = ingredient_serving = ingredient_codes = ingredient_images = []
+    ingredients_data = []
+    for name, qty, srv, code, img in zip(ingredient_names, ingredient_quantities, ingredient_serving, ingredient_codes, ingredient_images):
+        if name.strip():
+            ingredients_data.append({
+                "name": name.strip(), "quantity": qty.strip(),
+                "serving": srv, "code": code.strip(), "image": img.strip(),
+            })
+    return render(request, "pages/recipe-create.html", {
+        "recipe_form": recipe_form,
+        "ingredients_data": ingredients_data,
+    })
 
 @login_required
 def edit_recipe(request, recipe_id):
@@ -237,10 +248,21 @@ def edit_recipe(request, recipe_id):
             return redirect("pages:recipe_detail", recipe_id=recipe.id)
         else:
             messages.error(request, "Si us plau, corregeix els errors del formulari.")
-    recipe_form = RecipeForm(instance=recipe)
-    return render(request, "pages/recipe-edit.html", {"recipe_form": recipe_form, "recipe": recipe})
+    else:
+        recipe_form = RecipeForm(instance=recipe)
+        ingredient_names = ingredient_quantities = ingredient_serving = ingredient_codes = ingredient_images = []
+    ingredients_data = []
+    for name, qty, srv, code, img in zip(ingredient_names, ingredient_quantities, ingredient_serving, ingredient_codes, ingredient_images):
+        if name.strip():
+            ingredients_data.append({
+                "name": name.strip(), "quantity": qty.strip(),
+                "serving": srv, "code": code.strip(), "image": img.strip(),
+            })
+    return render(request, "pages/recipe-edit.html", {
+        "recipe_form": recipe_form, "recipe": recipe,
+        "ingredients_data": ingredients_data,
+    })
 
-@login_required
 def search_ingredients_api(request):
     query = request.GET.get("q", "").strip()
     if not query:
