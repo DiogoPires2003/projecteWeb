@@ -71,12 +71,16 @@ This decision facilitates deployment across different environments and ensures t
 
 ## 8. Best Practices (12-factor)
 
-As much as possible, development has followed the recommendations of the 12-factor app methodology, especially in aspects such as:
-- Separation between configuration and code
-- Use of environment variables
-- Ease of deployment
-
-This approach improves the maintainability and scalability of the application.
+The application follows the 12-factor app methodology:
+- **Codebase**: One codebase tracked in git
+- **Dependencies**: Explicitly declared in `requirements.txt`
+- **Config**: Configuration via environment variables (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`)
+- **Backing services**: SQLite database (swappable via config)
+- **Build, release, run**: Docker ensures separation
+- **Processes**: Stateless Django application
+- **Port binding**: Self-contained via Docker
+- **Disposability**: Fast startup and shutdown
+- **Dev/prod parity**: Same environment via Docker
 
 ***
 
@@ -86,10 +90,47 @@ Prerequisites:
 - Docker
 - Docker Compose
 
-To run the application, execute the following command:
+### Configuration
+
+Copy the example environment file and adjust as needed:
+
+```bash
+cp .env.example .env
+```
+
+### Run the application
 
 ```bash
 docker-compose up --build
 ```
 
-Fuentes
+The application will be available at `http://localhost:8000`.
+
+### Seed data (optional)
+
+To populate the database with sample recipes:
+
+```bash
+docker-compose exec web python seed_recipes.py
+```
+
+### Admin credentials
+
+Default admin user (create via `createsuperuser`):
+- Username: `admin`
+- Password: (set during creation)
+
+```bash
+docker-compose exec web python manage.py createsuperuser
+```
+
+### Test users (for E2E tests)
+
+- `alice` / `TestPass123!`
+- `bob` / `TestPass123!`
+
+***
+
+## 10. GitHub Repository
+
+https://github.com/DiogoPires2003/projecteWeb.git
