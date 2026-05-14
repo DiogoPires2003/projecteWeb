@@ -145,8 +145,8 @@ docker-compose exec web python manage.py createsuperuser
 
 ### Test users (for E2E tests)
 
-- `alice` / `TestPass123!`
-- `bob` / `TestPass123!`
+- `us_1` / `TestPass123!`
+- `us_2` / `TestPass123!`
 
 ***
 

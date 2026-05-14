@@ -18,8 +18,8 @@ PASSWORD = "TestPass123!"
 def user_a(db):
     """Crea i retorna l'usuari A ('alice')."""
     return User.objects.create_user(
-        username="alice",
-        email="alice@test.com",
+        username="us_1",
+        email="us_1@test.com",
         password=PASSWORD,
     )
 
@@ -28,8 +28,8 @@ def user_a(db):
 def user_b(db):
     """Crea i retorna l'usuari B ('bob')."""
     return User.objects.create_user(
-        username="bob",
-        email="bob@test.com",
+        username="us_2",
+        email="us_2@test.com",
         password=PASSWORD,
     )
 

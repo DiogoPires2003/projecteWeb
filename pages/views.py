@@ -12,7 +12,6 @@ from .forms import (
     UserRegisterForm, RecipeForm, RecipeIngredientForm, ProfileForm
 )
 
-@login_required
 def search_recipes_api(request):
     query = request.GET.get("q", "").strip()
     category = request.GET.get("category", "").strip()
@@ -24,7 +23,9 @@ def search_recipes_api(request):
         recipes = Recipe.objects.filter(category__icontains=category).select_related("owner").order_by("-created_at")[:20]
     else:
         recipes = Recipe.objects.filter(title__icontains=query).select_related("owner").order_by("-created_at")[:20]
-    saved_ids = set(SavedRecipe.objects.filter(user=request.user).values_list("recipe_id", flat=True))
+    saved_ids = set()
+    if request.user.is_authenticated:
+        saved_ids = set(SavedRecipe.objects.filter(user=request.user).values_list("recipe_id", flat=True))
     results = []
     for r in recipes:
         results.append({
@@ -262,7 +263,6 @@ def edit_recipe(request, recipe_id):
         "ingredients_data": ingredients_data,
     })
 
-@login_required
 def search_ingredients_api(request):
     query = request.GET.get("q", "").strip()
     if not query:
