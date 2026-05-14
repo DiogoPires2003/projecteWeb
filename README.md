@@ -7,7 +7,26 @@ Academic Year: 2025/2026
 Professors: Roberto Garcia and David Sarrat  
 
 Project repository:  
-https://github.com/DiogoPires2003/projecteWeb.git  
+https://github.com/DiogoPires2003/projecteWeb.git
+
+***
+
+## 11. Changes from Deliverable 1
+
+- **Environment variables**: `SECRET_KEY`, `DEBUG`, and `ALLOWED_HOSTS` are now configured via environment variables (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`) following 12-factor principles.
+- **Admin panel**: All models (`Recipe`, `RecipeIngredient`, `SavedRecipe`) are registered in the Django admin interface for easy data management.
+- **Form validation**: Recipe create and edit forms now preserve ingredient data on validation errors, and display field-level error messages.
+- **Database**: The `db.sqlite3` file is now tracked in git to facilitate testing (as requested in the deliverable).
+
+## 12. E2E Tests
+
+```bash
+# Install Playwright browsers (first time)
+playwright install chromium
+
+# Run E2E tests
+pytest tests_e2e/ -v
+```
 
 This project consists of the development of a web application using the Django framework, following the requirements defined in the assignment description.
 

@@ -14,12 +14,22 @@
     <form method="post" action="{% url 'pages:create_recipe' %}" class="space-y-8">
         {% csrf_token %}
 
+        {% if recipe_form.errors %}
+        <div class="bg-error-container/80 text-on-error-container p-4 rounded-3xl text-sm font-medium">
+            <span class="material-symbols-outlined text-lg align-middle mr-1">error</span>
+            Si us plau, corregeix els errors del formulari.
+        </div>
+        {% endif %}
+
         <!-- Basic Info -->
         <div class="bg-surface-container-low rounded-3xl p-6 space-y-5">
             <h3 class="text-sm font-bold uppercase tracking-widest text-outline mb-2">Basic Info</h3>
             <div>
                 <label class="block text-sm font-medium text-on-surface-variant mb-1">Title *</label>
                 {{ recipe_form.title }}
+                {% if recipe_form.title.errors %}
+                {% for error in recipe_form.title.errors %}<p class="text-xs text-error mt-1 font-medium">{{ error }}</p>{% endfor %}
+                {% endif %}
             </div>
             <div>
                 <label class="block text-sm font-medium text-on-surface-variant mb-1">Description</label>
@@ -68,6 +78,23 @@
             </div>
 
             <div id="ingredient-list" class="space-y-3">
+                {% for ing in ingredients_data %}
+                <div class="api-ingredient bg-surface-container rounded-2xl p-4">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-semibold text-on-surface truncate">{{ ing.name }}</div>
+                        </div>
+                        <button type="button" class="text-secondary shrink-0" onclick="this.closest('.api-ingredient, .manual-ingredient').remove()"><span class="material-symbols-outlined">delete</span></button>
+                    </div>
+                    <div class="grid grid-cols-5 gap-3">
+                        <input type="text" name="ingredient_name" value="{{ ing.name }}" class="col-span-2 w-full px-3 py-2 rounded-lg bg-surface-container-highest border-none text-sm text-on-surface" readonly />
+                        <input type="text" name="ingredient_quantity" value="{{ ing.quantity }}" placeholder="e.g. 200g" class="col-span-1 w-full px-3 py-2 rounded-lg bg-surface-container-highest border-none text-sm text-on-surface" />
+                        <input type="number" name="ingredient_serving" value="{{ ing.serving }}" min="1" class="col-span-1 w-full px-3 py-2 rounded-lg bg-surface-container-highest border-none text-sm text-on-surface" title="Grams used" />
+                        <input type="hidden" name="ingredient_code" value="{{ ing.code }}" />
+                        <input type="hidden" name="ingredient_image" value="{{ ing.image }}" />
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             <button type="button" id="add-manual" class="text-primary text-sm font-semibold flex items-center gap-1">
                 <span class="material-symbols-outlined text-lg">add</span> Add manual ingredient
