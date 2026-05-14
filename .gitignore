@@ -8,9 +8,11 @@ __pycache__/
 # Virtualenv
 venv/
 .venv/
+venv_web/
 
 # Django
 *.sqlite3
+!db.sqlite3
 *.log
 
 # Environment
@@ -21,3 +23,17 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+
+
+# Entorn virtual (Virtual Environment)
+venv_web/
+venv/
+env/
+
+# Base de dades local (SQLite)
+db.sqlite3
+
+# Fitxers de compilació i cau de Python
+__pycache__/
+*.py[cod]
+*$py.class
