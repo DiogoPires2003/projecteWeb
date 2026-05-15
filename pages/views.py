@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 import requests
 from urllib.parse import quote
-from .models import Recipe, RecipeIngredient, SavedRecipe
+from .models import Recipe, RecipeIngredient, SavedRecipe, CachedIngredient
 from .forms import (
     UserRegisterForm, RecipeForm, RecipeIngredientForm, ProfileForm
 )
@@ -267,25 +267,33 @@ def search_ingredients_api(request):
     query = request.GET.get("q", "").strip()
     if not query:
         return JsonResponse({"results": []})
+    
+    seen_codes = set()
+    results = []
+    api_success = False
+    
     url = f"https://es.openfoodfacts.org/cgi/search.pl?search_terms={quote(query)}&action=process&json=1&page_size=10"
     headers = {"User-Agent": "flavorloop - Django - Version 1.0"}
-    results = []
     try:
         response = requests.get(url, headers=headers, timeout=30)
         response.raise_for_status()
         data = response.json()
+        api_success = True
         for p in data.get("products", []):
             name = p.get("product_name", "")
             if not name:
                 continue
             code = p.get("code", "")
+            if code:
+                seen_codes.add(code)
             image_url = p.get("image_url") or p.get("image_front_url") or ""
             nutriments = p.get("nutriments", {})
-            results.append({
+            entry = {
                 "code": code,
                 "name": name,
                 "brands": p.get("brands", ""),
                 "image": image_url,
+                "cached": False,
                 "nutriments": {
                     "kcal": nutriments.get("energy-kcal_100g", 0),
                     "fat": nutriments.get("fat_100g", 0),
@@ -295,12 +303,47 @@ def search_ingredients_api(request):
                     "salt": nutriments.get("salt_100g", 0),
                     "sugars": nutriments.get("sugars_100g", 0),
                 }
-            })
+            }
+            results.append(entry)
+            if code:
+                CachedIngredient.objects.update_or_create(
+                    api_code=code,
+                    defaults={
+                        "name": name,
+                        "brands": p.get("brands", ""),
+                        "image": image_url,
+                        "nutrition_kcal": nutriments.get("energy-kcal_100g", 0),
+                        "nutrition_fat": nutriments.get("fat_100g", 0),
+                        "nutrition_carbs": nutriments.get("carbohydrates_100g", 0),
+                        "nutrition_protein": nutriments.get("proteins_100g", 0),
+                        "nutrition_fiber": nutriments.get("fiber_100g", 0),
+                        "nutrition_salt": nutriments.get("salt_100g", 0),
+                        "nutrition_sugars": nutriments.get("sugars_100g", 0),
+                    }
+                )
     except requests.RequestException:
         pass
+
+    if not api_success or len(results) < 10:
+        cached = CachedIngredient.objects.filter(name__icontains=query).exclude(api_code__in=seen_codes)[:10]
+        for c in cached:
+            results.append(c.to_dict() | {"cached": True})
+    
     return JsonResponse({"results": results})
 
 def _fetch_and_save_nutrition(ingredient, code):
+    cached = CachedIngredient.objects.filter(api_code=code).first()
+    if cached and not cached.is_stale(hours=24):
+        ingredient.nutrition_kcal = cached.nutrition_kcal
+        ingredient.nutrition_fat = cached.nutrition_fat
+        ingredient.nutrition_carbs = cached.nutrition_carbs
+        ingredient.nutrition_protein = cached.nutrition_protein
+        ingredient.nutrition_fiber = cached.nutrition_fiber
+        ingredient.nutrition_salt = cached.nutrition_salt
+        ingredient.nutrition_sugars = cached.nutrition_sugars
+        ingredient.save()
+        return
+
     url = f"https://es.openfoodfacts.org/api/v2/product/{code}.json"
     headers = {"User-Agent": "flavorloop - Django - Version 1.0"}
     try:
@@ -317,8 +360,31 @@ def _fetch_and_save_nutrition(ingredient, code):
         ingredient.nutrition_salt = nutriments.get("salt_100g", 0)
         ingredient.nutrition_sugars = nutriments.get("sugars_100g", 0)
         ingredient.save()
+        CachedIngredient.objects.update_or_create(
+            api_code=code,
+            defaults={
+                "name": product.get("product_name", ingredient.name),
+                "brands": product.get("brands", ""),
+                "image": product.get("image_url") or product.get("image_front_url") or "",
+                "nutrition_kcal": nutriments.get("energy-kcal_100g", 0),
+                "nutrition_fat": nutriments.get("fat_100g", 0),
+                "nutrition_carbs": nutriments.get("carbohydrates_100g", 0),
+                "nutrition_protein": nutriments.get("proteins_100g", 0),
+                "nutrition_fiber": nutriments.get("fiber_100g", 0),
+                "nutrition_salt": nutriments.get("salt_100g", 0),
+                "nutrition_sugars": nutriments.get("sugars_100g", 0),
+            }
+        )
     except requests.RequestException:
-        pass
+        if cached:
+            ingredient.nutrition_kcal = cached.nutrition_kcal
+            ingredient.nutrition_fat = cached.nutrition_fat
+            ingredient.nutrition_carbs = cached.nutrition_carbs
+            ingredient.nutrition_protein = cached.nutrition_protein
+            ingredient.nutrition_fiber = cached.nutrition_fiber
+            ingredient.nutrition_salt = cached.nutrition_salt
+            ingredient.nutrition_sugars = cached.nutrition_sugars
+            ingredient.save()
 
 @login_required
 def delete_recipe(request, recipe_id):
@@ -331,6 +397,7 @@ def delete_recipe(request, recipe_id):
 def search(request):
     query = request.GET.get("q", "").strip()
     products = []
+    api_success = False
     if query:
         url = f"https://es.openfoodfacts.org/cgi/search.pl?search_terms={quote(query)}&action=process&json=1&page_size=20"
         headers = {"User-Agent": "flavorloop - Django - Version 1.0"}
@@ -338,11 +405,13 @@ def search(request):
             response = requests.get(url, headers=headers, timeout=30)
             response.raise_for_status()
             data = response.json()
+            api_success = True
             raw_products = data.get("products", [])
             for p in raw_products:
                 name = p.get("product_name", "")
                 if not name:
                     continue
+                code = p.get("code", "")
                 image_url = p.get("image_url") or p.get("image_front_url") or p.get("image_url_small", "")
                 if image_url and not image_url.startswith("http"):
                     image_url = "https://es.openfoodfacts.org" + image_url
@@ -358,8 +427,36 @@ def search(request):
                     "image_url": image_url,
                     "quantity": quantity,
                 })
+                if code:
+                    nutriments = p.get("nutriments", {})
+                    CachedIngredient.objects.update_or_create(
+                        api_code=code,
+                        defaults={
+                            "name": name,
+                            "brands": brands,
+                            "image": image_url,
+                            "nutrition_kcal": nutriments.get("energy-kcal_100g", 0),
+                            "nutrition_fat": nutriments.get("fat_100g", 0),
+                            "nutrition_carbs": nutriments.get("carbohydrates_100g", 0),
+                            "nutrition_protein": nutriments.get("proteins_100g", 0),
+                            "nutrition_fiber": nutriments.get("fiber_100g", 0),
+                            "nutrition_salt": nutriments.get("salt_100g", 0),
+                            "nutrition_sugars": nutriments.get("sugars_100g", 0),
+                        }
+                    )
         except requests.RequestException:
             messages.error(request, "No s'ha pogut connectar amb l'API d'Open Food Facts.")
+
+        if not api_success:
+            cached = CachedIngredient.objects.filter(name__icontains=query)[:20]
+            for c in cached:
+                products.append({
+                    "name": c.name,
+                    "brands": c.brands,
+                    "nutriscore": "unknown",
+                    "image_url": c.image,
+                    "quantity": "",
+                })
 
     return render(request, "pages/search-results.html", {
         "query": query,

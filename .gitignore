@@ -11,8 +11,6 @@ venv/
 venv_web/
 
 # Django
-*.sqlite3
-!db.sqlite3
 *.log
 
 # Environment
@@ -29,9 +27,6 @@ venv_web/
 venv_web/
 venv/
 env/
-
-# Base de dades local (SQLite)
-db.sqlite3
 
 # Fitxers de compilació i cau de Python
 __pycache__/

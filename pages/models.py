@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Recipe(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipes")
@@ -74,4 +75,43 @@ class RecipeIngredient(models.Model):
             "fiber": (self.nutrition_fiber or 0) * scale,
             "salt": (self.nutrition_salt or 0) * scale,
             "sugars": (self.nutrition_sugars or 0) * scale,
+        }
+
+class CachedIngredient(models.Model):
+    api_code = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=200)
+    brands = models.CharField(max_length=500, blank=True, default="")
+    image = models.URLField(blank=True, default="")
+    nutrition_kcal = models.FloatField(default=0, blank=True, null=True)
+    nutrition_fat = models.FloatField(default=0, blank=True, null=True)
+    nutrition_carbs = models.FloatField(default=0, blank=True, null=True)
+    nutrition_protein = models.FloatField(default=0, blank=True, null=True)
+    nutrition_fiber = models.FloatField(default=0, blank=True, null=True)
+    nutrition_salt = models.FloatField(default=0, blank=True, null=True)
+    nutrition_sugars = models.FloatField(default=0, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.api_code})"
+
+    def is_stale(self, hours=24):
+        if self.updated_at is None:
+            return True
+        return (timezone.now() - self.updated_at).total_seconds() > hours * 3600
+
+    def to_dict(self):
+        return {
+            "code": self.api_code,
+            "name": self.name,
+            "brands": self.brands,
+            "image": self.image,
+            "nutriments": {
+                "kcal": self.nutrition_kcal or 0,
+                "fat": self.nutrition_fat or 0,
+                "carbs": self.nutrition_carbs or 0,
+                "protein": self.nutrition_protein or 0,
+                "fiber": self.nutrition_fiber or 0,
+                "salt": self.nutrition_salt or 0,
+                "sugars": self.nutrition_sugars or 0,
+            },
         }
