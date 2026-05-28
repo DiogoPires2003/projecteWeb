@@ -3,12 +3,12 @@
 {% block title %}{{ recipe.title|default:"Recipe Details" }} - FlavorLoop{% endblock %}
 
 {% block content %}
-<main class="pb-32">
+<main class="pb-32" vocab="http://schema.org/" typeof="Recipe">
     {% if recipe %}
     <!-- Hero Section -->
     <div class="relative h-[300px] w-full overflow-hidden bg-surface-container-high">
         {% if recipe.image_url %}
-        <img class="w-full h-full object-cover" src="{{ recipe.image_url }}" alt="{{ recipe.title }}" />
+        <img class="w-full h-full object-cover" src="{{ recipe.image_url }}" alt="{{ recipe.title }}" property="image" />
         {% else %}
         <div class="w-full h-full flex items-center justify-center bg-surface-container-high">
             <span class="material-symbols-outlined text-outline text-8xl">restaurant</span>
@@ -22,7 +22,7 @@
         <div class="flex justify-between items-center bg-surface-container-lowest rounded-2xl p-5 shadow-[0_8px_30px_rgb(71,101,80,0.06)] mb-8">
             <div class="flex flex-col items-center gap-1 border-r border-outline-variant/20 flex-1">
                 <span class="material-symbols-outlined text-primary text-xl">schedule</span>
-                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest">{{ recipe.prep_time_minutes }} min</span>
+                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest" property="prepTime" content="PT{{ recipe.prep_time_minutes }}M">{{ recipe.prep_time_minutes }} min</span>
             </div>
             <div class="flex flex-col items-center gap-1 border-r border-outline-variant/20 flex-1">
                 <span class="material-symbols-outlined text-primary text-xl">bar_chart</span>
@@ -30,39 +30,39 @@
             </div>
             <div class="flex flex-col items-center gap-1 flex-1">
                 <span class="material-symbols-outlined text-primary text-xl">groups</span>
-                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest">{{ recipe.servings }} portions</span>
+                <span class="text-[11px] font-semibold text-outline uppercase tracking-widest" property="recipeYield">{{ recipe.servings }} portions</span>
             </div>
         </div>
         <!-- Title & Bio -->
         <div class="mb-8 text-center">
-            <h1 class="text-4xl font-headline font-bold text-on-surface mb-3 tracking-tight">{{ recipe.title }}</h1>
+            <h1 class="text-4xl font-headline font-bold text-on-surface mb-3 tracking-tight" property="name">{{ recipe.title }}</h1>
             {% if recipe.description %}
-            <p class="text-on-surface-variant text-sm leading-relaxed max-w-sm mx-auto italic">"{{ recipe.description|truncatechars:150 }}"</p>
+            <p class="text-on-surface-variant text-sm leading-relaxed max-w-sm mx-auto italic" property="description">"{{ recipe.description|truncatechars:150 }}"</p>
             {% endif %}
             {% if recipe.category %}
-            <span class="inline-block mt-3 px-4 py-1.5 bg-primary-container text-on-primary-container rounded-full text-xs font-semibold">{{ recipe.category }}</span>
+            <span class="inline-block mt-3 px-4 py-1.5 bg-primary-container text-on-primary-container rounded-full text-xs font-semibold" property="recipeCategory">{{ recipe.category }}</span>
             {% endif %}
         </div>
         <!-- Nutrition Summary -->
-        <section class="mb-8">
+        <section class="mb-8" property="nutrition" typeof="NutritionInformation">
             <h2 class="text-xl font-headline font-bold text-on-surface mb-4 ml-1">Nutrition Info</h2>
             {% with nutrition=recipe.get_total_nutrition %}
             <div class="bg-primary/5 rounded-2xl p-5 border border-primary/10">
                 <div class="grid grid-cols-4 gap-4 mb-4">
                     <div class="text-center">
-                        <div class="text-2xl font-headline font-bold text-primary">{{ nutrition.kcal|floatformat:0 }}</div>
+                        <div class="text-2xl font-headline font-bold text-primary" property="calories" content="{{ nutrition.kcal|floatformat:0 }} kcal">{{ nutrition.kcal|floatformat:0 }}</div>
                         <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Kcal</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-headline font-bold text-secondary">{{ nutrition.protein|floatformat:1 }}</div>
+                        <div class="text-2xl font-headline font-bold text-secondary" property="proteinContent" content="{{ nutrition.protein|floatformat:1 }} g">{{ nutrition.protein|floatformat:1 }}</div>
                         <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Protein (g)</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-headline font-bold text-tertiary">{{ nutrition.carbs|floatformat:1 }}</div>
+                        <div class="text-2xl font-headline font-bold text-tertiary" property="carbohydrateContent" content="{{ nutrition.carbs|floatformat:1 }} g">{{ nutrition.carbs|floatformat:1 }}</div>
                         <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Carbs (g)</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-headline font-bold text-tertiary">{{ nutrition.fat|floatformat:1 }}</div>
+                        <div class="text-2xl font-headline font-bold text-tertiary" property="fatContent" content="{{ nutrition.fat|floatformat:1 }} g">{{ nutrition.fat|floatformat:1 }}</div>
                         <div class="text-[10px] uppercase tracking-wider text-on-surface-variant">Fat (g)</div>
                     </div>
                 </div>
@@ -113,6 +113,7 @@
                     </div>
                     {% endif %}
                     <div class="flex-1">
+                        <meta property="recipeIngredient" content="{{ ing.quantity }} {{ ing.name }}" />
                         <div class="text-sm font-semibold text-on-surface">{{ ing.name }}</div>
                         <div class="text-xs text-on-surface-variant">{{ ing.quantity }}{% if ing.serving_qty %} · {{ ing.serving_qty }}g{% endif %}</div>
                     </div>
@@ -145,7 +146,7 @@
         <section id="instructions-section" class="mb-12">
             <h2 class="text-2xl font-headline font-bold text-on-surface mb-6">Preparation</h2>
             <div class="bg-surface-container-low rounded-2xl p-6">
-                <p class="text-sm font-medium leading-relaxed text-on-surface-variant whitespace-pre-line">{{ recipe.instructions }}</p>
+                <p class="text-sm font-medium leading-relaxed text-on-surface-variant whitespace-pre-line" property="recipeInstructions">{{ recipe.instructions }}</p>
             </div>
         </section>
         {% endif %}
